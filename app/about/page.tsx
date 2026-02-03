@@ -14,6 +14,7 @@ import {
   Linkedin,
   Github
 } from 'lucide-react'
+import Link from 'next/link'
 
 export default function SobreMi() {
   const tecnologias = {
@@ -294,13 +295,13 @@ export default function SobreMi() {
 
           {/* Enlace al portafolio */}
           <div className='mt-10 pt-6 border-t border-border-dark'>
-            <a
+            <Link
               href='/proyectos'
               className='inline-flex items-center gap-2 text-primary hover:text-green-400 transition-colors'
             >
               <span>Ver mis proyectos</span>
               <ExternalLink className='w-4 h-4' />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

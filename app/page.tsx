@@ -4,7 +4,7 @@ import Image from 'next/image'
 import {
   User,
   Briefcase,
-  Code,
+  // Code,
   MapPin,
   Calendar,
   Cpu,
@@ -15,14 +15,16 @@ import {
   Github
 } from 'lucide-react'
 import Link from 'next/link'
+import { useFiles } from '@/context/FileContext'
 
 export default function SobreMi() {
-  const tecnologias = {
-    frontend: ['React.js', 'Next.js', 'Vite', 'Tailwind', 'ReduxToolkit'],
-    backend: ['Node.js', 'Express', 'Sequelize', 'NestJS', 'Prisma'],
-    basesDeDatos: ['PostgreSQL', 'MongoDB'],
-    herramientas: ['Git', 'GitHub', 'Vercel', 'Render', 'Postman', 'JWT']
-  }
+  const { addFile } = useFiles()
+  // const tecnologias = {
+  //   frontend: ['React.js', 'Next.js', 'Vite', 'Tailwind', 'ReduxToolkit'],
+  //   backend: ['Node.js', 'Express', 'Sequelize', 'NestJS', 'Prisma'],
+  //   basesDeDatos: ['PostgreSQL', 'MongoDB'],
+  //   herramientas: ['Git', 'GitHub', 'Vercel', 'Render', 'Postman', 'JWT']
+  // }
 
   const educacion = [
     {
@@ -145,86 +147,6 @@ export default function SobreMi() {
             </div>
           </div>
 
-          {/* Sección: Tecnologías */}
-          <div className='mb-10'>
-            <div className='flex items-center gap-3 mb-6'>
-              <Code className='text-primary w-7 h-7' />
-              <h2 className='text-2xl font-bold text-white'>
-                Stack Tecnológico
-              </h2>
-            </div>
-
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              {/* Frontend */}
-              <div className='bg-background-dark rounded-lg border border-border-dark p-5'>
-                <h3 className='text-white font-semibold mb-4 text-lg'>
-                  Frontend
-                </h3>
-                <div className='flex flex-wrap gap-2'>
-                  {tecnologias.frontend.map((tech) => (
-                    <span
-                      key={tech}
-                      className='px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-md text-sm'
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Backend */}
-              <div className='bg-background-dark rounded-lg border border-border-dark p-5'>
-                <h3 className='text-white font-semibold mb-4 text-lg'>
-                  Backend
-                </h3>
-                <div className='flex flex-wrap gap-2'>
-                  {tecnologias.backend.map((tech) => (
-                    <span
-                      key={tech}
-                      className='px-3 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-sm'
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bases de Datos */}
-              <div className='bg-background-dark rounded-lg border border-border-dark p-5'>
-                <h3 className='text-white font-semibold mb-4 text-lg'>
-                  Bases de Datos
-                </h3>
-                <div className='flex flex-wrap gap-2'>
-                  {tecnologias.basesDeDatos.map((tech) => (
-                    <span
-                      key={tech}
-                      className='px-3 py-1.5 bg-green-500/10 text-green-400 border border-green-500/20 rounded-md text-sm'
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Herramientas */}
-              <div className='bg-background-dark rounded-lg border border-border-dark p-5'>
-                <h3 className='text-white font-semibold mb-4 text-lg'>
-                  Herramientas
-                </h3>
-                <div className='flex flex-wrap gap-2'>
-                  {tecnologias.herramientas.map((tech) => (
-                    <span
-                      key={tech}
-                      className='px-3 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-md text-sm'
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Sección: Experiencia Destacada */}
           <div className='mb-10'>
             <div className='flex items-center gap-3 mb-6'>
@@ -296,8 +218,16 @@ export default function SobreMi() {
           {/* Enlace al portafolio */}
           <div className='mt-10 pt-6 border-t border-border-dark'>
             <Link
-              href='/proyectos'
+              href='/saviorperu'
               className='inline-flex items-center gap-2 text-primary hover:text-green-400 transition-colors'
+              onClick={() => {
+                addFile({
+                  color: 'blue',
+                  icon: 'javascript',
+                  name: 'saviorperu.tsx',
+                  path: '/saviorperu'
+                })
+              }}
             >
               <span>Ver mis proyectos</span>
               <ExternalLink className='w-4 h-4' />

@@ -3,13 +3,35 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Eye, Info, Code, ExternalLink, Github } from 'lucide-react'
-import { projects, defaultProject } from '@/lib/projects'
+import { projects, defaultProject, Project } from '@/lib/projects'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 
 export default function ProjectExplorerPage() {
   const params = useParams()
-  const [selectedProject, setSelectedProject] = useState(defaultProject)
+  const [selectedProject, setSelectedProject] = useState({
+    id: '',
+    title: '',
+    description: '',
+    longDescription: '',
+    liveUrl: '',
+    repoUrl: '',
+    imageUrl: '',
+    technologies: ['', ''],
+    features: ['', '', ''],
+    stats: [
+      { label: 'Performance', val: '--', color: 'text-gray-400' },
+      { label: 'SEO', val: '--', color: 'text-gray-400' },
+      { label: 'Accessibility', val: '--', color: 'text-gray-400' },
+      { label: 'Commits', val: '--', color: 'text-gray-400' }
+    ],
+    codeSnippet: {
+      file: '',
+      language: '',
+      lines: ['', '', '']
+    }
+  })
+
   const [imageError, setImageError] = useState(false)
 
   // Encontrar proyecto por ID de la ruta
@@ -44,32 +66,72 @@ export default function ProjectExplorerPage() {
     </svg>
   `)
 
+  // Función auxiliar para resaltar sintaxis de forma más precisa
+  const highlightSyntax = (line: string) => {
+    if (line.trim().startsWith('//'))
+      return <span className='text-gray-500 italic'>{line}</span>
+
+    return line
+      .split(/(\s+|\(|\)|\[|\]|\{|\}|\.|\,|=|:|;|\?|\!)/)
+      .map((part, i) => {
+        if (
+          /^(export|const|let|var|return|async|await|if|else|try|catch|import|from|type|interface|default)$/.test(
+            part
+          )
+        ) {
+          return (
+            <span key={i} className='text-pink-400'>
+              {part}
+            </span>
+          )
+        }
+        if (
+          /^(function|dispatch|useReducer|addItem|removeItem|fetchGames|fetch|axios|launch|newPage|evaluate|launch|get|set|delete)$/.test(
+            part
+          )
+        ) {
+          return (
+            <span key={i} className='text-yellow-300'>
+              {part}
+            </span>
+          )
+        }
+        if (/^(['"].*['"])$/.test(part)) {
+          return (
+            <span key={i} className='text-green-400'>
+              {part}
+            </span>
+          )
+        }
+        if (/^[0-9]+$/.test(part)) {
+          return (
+            <span key={i} className='text-orange-400'>
+              {part}
+            </span>
+          )
+        }
+        if (/^[A-Z][a-zA-Z0-9]+$/.test(part)) {
+          return (
+            <span key={i} className='text-blue-300'>
+              {part}
+            </span>
+          )
+        }
+        if (/^(=|=>|\+|\-|\*|\/|:|!|\?)$/.test(part)) {
+          return (
+            <span key={i} className='text-purple-400'>
+              {part}
+            </span>
+          )
+        }
+        return <span key={i}>{part}</span>
+      })
+  }
+
   return (
     <div className='flex-1 flex flex-col lg:flex-row overflow-hidden'>
       {/* Panel izquierdo: Vista previa visual */}
       <div className='flex-1 lg:w-1/2 p-6 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border-dark bg-panel-dark'>
-        {/* Selector de proyectos */}
-        {/* <div className='mb-6 flex gap-2'>
-          {projects.map((project) => (
-            <button
-              key={project.id}
-              onClick={() => setSelectedProject(project)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                selectedProject.id === project.id
-                  ? 'bg-primary text-background-dark'
-                  : 'bg-background-dark text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              {project.id === 'saviorperu'
-                ? 'SaviorPeru'
-                : project.id === 'grimreaper'
-                  ? 'GrimReaper'
-                  : 'Videogames'}
-            </button>
-          ))}
-        </div> */}
-
-        {/* Vista previa del proyecto */}
         <div className='bg-background-dark rounded-xl overflow-hidden shadow-2xl border border-border-dark'>
           <div className='h-8 bg-[#1a2e24] flex items-center px-4 gap-2 border-b border-border-dark'>
             <div className='flex gap-1.5'>
@@ -102,7 +164,7 @@ export default function ProjectExplorerPage() {
                 }}
               />
             )}
-            <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]'>
+            <div className='absolute inset-0 flex flex-col gap-1 items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]'>
               <a
                 href={selectedProject.liveUrl}
                 target='_blank'
@@ -112,11 +174,19 @@ export default function ProjectExplorerPage() {
                 <Eye size={18} />
                 Ver Demo en Vivo
               </a>
+              <a
+                href={selectedProject.repoUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='bg-white hover:bg-gray-200 text-background-dark font-bold py-2 px-6 rounded-lg flex items-center justify-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 w-full max-w-52'
+              >
+                <Github size={18} />
+                Ver Código
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Estadísticas */}
         <div className='mt-6 grid grid-cols-2 md:grid-cols-4 gap-4'>
           {selectedProject.stats.map((stat) => (
             <div
@@ -133,7 +203,6 @@ export default function ProjectExplorerPage() {
           ))}
         </div>
 
-        {/* Características */}
         <div className='mt-6 bg-background-dark p-4 rounded-lg border border-border-dark'>
           <h3 className='text-white font-bold mb-3 flex items-center gap-2'>
             <Info size={18} className='text-primary' />
@@ -164,9 +233,9 @@ export default function ProjectExplorerPage() {
               {selectedProject.title}
             </h1>
             <div className='flex flex-wrap gap-2 mb-6'>
-              {selectedProject.technologies.map((tech) => (
+              {selectedProject.technologies.map((tech, index) => (
                 <span
-                  key={tech}
+                  key={index}
                   className='px-3 py-1 rounded bg-white/5 border border-white/10 text-gray-300 text-xs font-mono'
                 >
                   {tech}
@@ -188,39 +257,36 @@ export default function ProjectExplorerPage() {
               <Code className='text-primary text-xl' />
               Implementación Clave
             </h3>
-            <div className='bg-background-dark rounded-lg border border-border-dark overflow-hidden mb-8 font-mono text-sm relative group'>
-              <div className='px-4 py-2 border-b border-white/5 text-xs text-gray-500 flex justify-between items-center'>
-                <span>src/{selectedProject.codeSnippet.file}</span>
-                <span className='text-gray-500'>
+
+            {/* RENDERIZADO MEJORADO DEL EDITOR DE CÓDIGO */}
+            <div className='bg-[#0d1117] rounded-lg border border-border-dark overflow-hidden mb-8 font-mono text-[13px] relative group shadow-2xl'>
+              <div className='px-4 py-2 bg-[#161b22] border-b border-white/5 text-xs text-gray-400 flex justify-between items-center'>
+                <div className='flex items-center gap-2'>
+                  <Code size={14} className='text-blue-400' />
+                  <span>{selectedProject.codeSnippet.file}</span>
+                </div>
+                <span className='bg-white/5 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider'>
                   {selectedProject.codeSnippet.language}
                 </span>
               </div>
-              <div className='p-4 overflow-x-auto text-gray-300'>
-                <div className='space-y-0.5'>
-                  {selectedProject.codeSnippet.lines.map((line, index) => (
-                    <div key={index} className='flex'>
-                      <span className='text-purple-400 w-8 text-right pr-4 select-none'>
-                        {index + 1}
-                      </span>
-                      <pre className='flex-1 overflow-x-auto'>
-                        <code
-                          className={`
-                            ${line.includes('export') ? 'text-pink-400' : ''}
-                            ${line.includes('const') || line.includes('let') || line.includes('async') ? 'text-blue-400' : ''}
-                            ${line.includes('function') || line.includes('=>') ? 'text-yellow-300' : ''}
-                            ${line.includes('try') || line.includes('catch') ? 'text-red-400' : ''}
-                            ${line.includes('//') ? 'text-gray-500' : ''}
-                            ${line.includes('return') ? 'text-pink-400' : ''}
-                            ${line.includes('await') ? 'text-blue-400' : ''}
-                            ${line.includes('axios') || line.includes('fetch') ? 'text-green-400' : ''}
-                          `}
-                        >
-                          {line}
-                        </code>
-                      </pre>
-                    </div>
-                  ))}
-                </div>
+              <div className='p-4 overflow-x-auto custom-scrollbar bg-[#0d1117]'>
+                <table className='w-full border-collapse'>
+                  <tbody>
+                    {selectedProject.codeSnippet.lines.map((line, index) => (
+                      <tr
+                        key={index}
+                        className='hover:bg-white/2 group/line leading-6'
+                      >
+                        <td className='text-gray-600 w-10 text-right pr-4 select-none border-r border-white/5 font-mono text-xs'>
+                          {index + 1}
+                        </td>
+                        <td className='pl-4 whitespace-pre text-[#e6edf3]'>
+                          {highlightSyntax(line)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
 
@@ -245,7 +311,6 @@ export default function ProjectExplorerPage() {
               </a>
             </div>
 
-            {/* Navegación entre proyectos */}
             <div className='mt-8 pt-6 border-t border-white/5'>
               <div className='flex justify-between'>
                 {projects.map((project, index) => {
@@ -264,31 +329,19 @@ export default function ProjectExplorerPage() {
                   return (
                     <React.Fragment key={index}>
                       <Link
-                        key={`prev-${project.id}`}
                         href={`/projects/${prevProject.id}`}
-                        className='text-gray-400 hover:text-white text-sm flex items-center gap-2'
+                        className='text-gray-400 hover:text-white text-sm flex items-center gap-2 transition-colors'
                       >
-                        ←{' '}
-                        {prevProject.id === 'saviorperu'
-                          ? 'SaviorPeru'
-                          : prevProject.id === 'grimreaper'
-                            ? 'GrimReaper'
-                            : 'Videogames'}
+                        ← {prevProject.title.split(' ')[0]}
                       </Link>
                       <Link
-                        key={`next-${project.id}`}
                         href={`/projects/${nextProject.id}`}
-                        className='text-gray-400 hover:text-white text-sm flex items-center gap-2'
+                        className='text-gray-400 hover:text-white text-sm flex items-center gap-2 transition-colors'
                       >
-                        {nextProject.id === 'saviorperu'
-                          ? 'SaviorPeru'
-                          : nextProject.id === 'grimreaper'
-                            ? 'GrimReaper'
-                            : 'Videogames'}{' '}
-                        →
+                        {nextProject.title.split(' ')[0]} →
                       </Link>
                     </React.Fragment>
-                  )
+                  ) // Solo renderizamos el par actual para no duplicar enlaces
                 })}
               </div>
             </div>

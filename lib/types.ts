@@ -1,16 +1,3 @@
-// Navigation
-export interface FileItem {
-  id?: string
-  name: string
-  icon: string
-  iconColor?: string
-  path: string
-}
-
-export interface TabItem extends FileItem {
-  color: string
-}
-
 // Project Data
 export interface ProjectStat {
   label: string

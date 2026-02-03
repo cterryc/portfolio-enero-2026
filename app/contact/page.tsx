@@ -1,27 +1,45 @@
+'use client'
+
 import { Terminal as TerminalIcon } from 'lucide-react'
 import Form from 'next/form'
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+// import { revalidatePath } from 'next/cache'
+// import { redirect } from 'next/navigation'
+import React, { useEffect, useRef, useState } from 'react'
 
 export default function ContactPage() {
-  async function createPost(formData: FormData) {
-    'use server'
+  const [body, setBody] = useState({ name: '', message: '' })
+  const inputRef = useRef<HTMLInputElement>(null)
+  const texttareaRef = useRef<HTMLTextAreaElement>(null)
+  const [taget, setTaget] = useState('')
 
-    const title = formData.get('title') as string
-    const content = formData.get('content') as string
+  useEffect(() => {
+    console.log(body)
+  }, [body])
 
-    // await prisma.post.create({
-    //   data: {
-    //     title,
-    //     content,
-    //     authorId: 1,
-    //   },
-    // });
-    console.log('title', title)
-    console.log('content', content)
+  const handleInputFocus = () => {
+    inputRef.current?.setSelectionRange(0, 0)
+  }
 
-    revalidatePath('/contact')
-    redirect('/contact')
+  const handleTextareaFocus = () => {
+    texttareaRef.current?.setSelectionRange(0, 0)
+  }
+
+  async function createPost() {
+    // 'use server'
+
+    if (!body.name && !body.message) {
+      alert('Campos "name" y "message" obligatorios')
+    }
+    const sendMail = await fetch('/api/sendmail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+
+    // revalidatePath('/contact')
+    // redirect('/contact')
   }
 
   return (
@@ -92,7 +110,7 @@ export default function ContactPage() {
               </span>
             </div>
           </div>
-          <div className='flex group hover:bg-white/2 items-center py-1'>
+          <div className='flex group hover:bg-white/2 items-center py-1 relative'>
             <div className='w-8 md:w-12 text-right pr-4 text-gray-600 select-none'>
               7
             </div>
@@ -103,11 +121,55 @@ export default function ContactPage() {
               <span className='text-orange-300'>{'"'}</span>
               <input
                 autoComplete='off'
-                className='bg-transparent border-none p-0 h-6 flex-1 min-w-50 text-orange-300 focus:ring-0 placeholder-gray-600/50 font-mono focus:bg-white/5 rounded-sm transition-colors'
+                className='bg-transparent border-none p-0 h-6 flex-1 min-w-50 text-orange-300 focus:ring-0 placeholder-gray-600/50 font-mono focus:bg-white/5 rounded-sm transition-colors outline-0'
                 placeholder='John Doe'
                 type='text'
+                required={true}
+                value={body.name + '"'}
+                onChange={(e) => {
+                  console.log(e.target.value.split('"').join(''))
+
+                  setBody({
+                    ...body,
+                    name: e.target.value.split('"').join('')
+                  })
+                }}
+                onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                  console.log(e.currentTarget.name)
+
+                  if (
+                    e.currentTarget.name !== taget &&
+                    e.currentTarget.value === '"'
+                  ) {
+                    setTaget(e.currentTarget.name)
+                    handleInputFocus()
+                  }
+                }}
+                ref={inputRef}
+                name='name'
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  const cursorPosition = e.currentTarget.selectionStart
+                  const textLength = e.currentTarget.value.length
+                  if (e.key === 'Backspace') {
+                    if (cursorPosition === textLength) {
+                      inputRef.current?.setSelectionRange(
+                        e.currentTarget.value.length - 2,
+                        e.currentTarget.value.length - 1
+                      )
+                    }
+                  } else if (cursorPosition === textLength) {
+                    inputRef.current?.setSelectionRange(
+                      e.currentTarget.value.length,
+                      e.currentTarget.value.length - 1
+                    )
+                  }
+                }}
               />
-              <span className='text-orange-300'>{'"'},</span>
+              {body.name === '' && (
+                <span className='text-gray-500 absolute left-1/5'>
+                  {'//'} John Doe
+                </span>
+              )}
             </div>
           </div>
           <div className='flex group hover:bg-white/2 items-start py-1'>
@@ -120,11 +182,52 @@ export default function ContactPage() {
               </label>
               <span className='text-orange-300 pt-1'>{'"'}</span>
               <textarea
-                className='bg-transparent border-none p-0 w-full md:w-2/3 text-orange-300 focus:ring-0 placeholder-gray-600/50 resize-none font-mono focus:bg-white/5 rounded-sm transition-colors leading-6'
+                className='bg-transparent border-none py-1 px-0 w-full md:w-2/3 text-orange-300 focus:ring-0 placeholder-gray-600/50 resize-none font-mono focus:bg-white/5 rounded-sm transition-colors leading-6 outline-0'
                 placeholder='Type your message here...'
                 rows={4}
+                required={true}
+                value={body.message + '"'}
+                onChange={(e) => {
+                  console.log(e.target.value.split('"').join(''))
+
+                  setBody({
+                    ...body,
+                    message: e.target.value.split('"').join('')
+                  })
+                }}
+                onClick={(e: React.MouseEvent<HTMLTextAreaElement>) => {
+                  console.log(e.currentTarget.name)
+
+                  if (e.currentTarget.value === '"') {
+                    setTaget(e.currentTarget.name)
+                    handleTextareaFocus()
+                  }
+                }}
+                ref={texttareaRef}
+                name='message'
+                onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                  const cursorPosition = e.currentTarget.selectionStart
+                  const textLength = e.currentTarget.value.length
+                  if (e.key === 'Backspace') {
+                    if (cursorPosition === textLength) {
+                      texttareaRef.current?.setSelectionRange(
+                        e.currentTarget.value.length - 2,
+                        e.currentTarget.value.length - 1
+                      )
+                    }
+                  } else if (cursorPosition === textLength) {
+                    texttareaRef.current?.setSelectionRange(
+                      e.currentTarget.value.length,
+                      e.currentTarget.value.length - 1
+                    )
+                  }
+                }}
               ></textarea>
-              <span className='text-orange-300 pt-1'>{'"'}</span>
+              {body.message === '' && (
+                <span className='text-gray-500 absolute left-1/4'>
+                  {'//'} Type your message here...
+                </span>
+              )}
             </div>
           </div>
           <div className='flex group hover:bg-white/2 py-2'>

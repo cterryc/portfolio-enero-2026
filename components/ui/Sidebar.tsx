@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   Folder,
   File,
@@ -12,8 +12,9 @@ import {
   MoreHorizontal,
   ChevronRight
 } from 'lucide-react'
-import { navigationData } from '@/data/navigation'
 import { useFiles } from '@/context/FileContext'
+import { projects } from '@/lib/projects'
+// import { useRouter } from 'next/na'
 
 const iconMap = {
   javascript: File,
@@ -26,6 +27,7 @@ const iconMap = {
 export default function Sidebar() {
   const pathname = usePathname()
   const { addFile } = useFiles()
+  const navigate = useRouter()
 
   const linkComponent = (
     path: string,
@@ -82,37 +84,38 @@ export default function Sidebar() {
             <span>Proyectos</span>
           </div>
           <div className='pl-8 flex flex-col gap-0.5'>
-            {navigationData.map((file) => {
-              const Icon = iconMap[file.icon as keyof typeof iconMap]
+            {projects.map((file) => {
+              const Icon = iconMap['javascript']
               return (
-                <Link
+                <button
                   key={file.id}
-                  href={file.path}
+                  // href={`/${file.id}`}
                   className={`flex items-center gap-2 px-3 py-1.5 w-full text-left transition-colors group ${
-                    pathname === file.path
+                    pathname === '/' + file.id
                       ? 'bg-primary/10 border-l-2 border-primary'
                       : 'hover:bg-white/5'
                   }`}
                   onClick={() => {
                     addFile({
-                      color: file.iconColor,
-                      icon: file.icon,
-                      name: file.name,
-                      path: file.path
+                      color: 'blue',
+                      icon: 'javascript',
+                      name: file.id + '.tsx',
+                      path: '/' + file.id
                     })
+                    navigate.push(`/${file.id}`)
                   }}
                 >
-                  <Icon className={`text-${file.iconColor}-400 text-[18px]`} />
+                  <Icon className={`text-blue-400 text-[18px]`} />
                   <span
                     className={`text-sm ${
-                      pathname === file.path
+                      pathname === '/' + file.id
                         ? 'text-white font-medium'
                         : 'text-gray-400 group-hover:text-white'
                     }`}
                   >
-                    {file.name}
+                    {file.id + '.tsx'}
                   </span>
-                </Link>
+                </button>
               )
             })}
           </div>

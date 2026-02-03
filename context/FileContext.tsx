@@ -28,30 +28,24 @@ export function FilesProvider({ children }: { children: React.ReactNode }) {
       icon: 'description',
       color: 'orange'
     },
-    {
-      name: 'ecommerce.tsx',
-      path: '/ecommerce',
-      icon: 'javascript',
-      color: 'blue'
-    },
-    {
-      name: 'skills.json',
-      path: '/skills',
-      icon: 'data_object',
-      color: 'yellow'
-    },
+    // {
+    //   name: 'skills.json',
+    //   path: '/skills',
+    //   icon: 'data_object',
+    //   color: 'yellow'
+    // },
     {
       name: 'experience.git',
       path: '/experience',
       icon: 'history',
       color: 'orange'
-    },
-    {
-      name: 'contact.tsx',
-      path: '/contact',
-      icon: 'javascript',
-      color: 'blue'
     }
+    // {
+    //   name: 'contact.tsx',
+    //   path: '/contact',
+    //   icon: 'javascript',
+    //   color: 'blue'
+    // }
   ])
 
   const addFile = (file: ItemArrayFiles) => {
