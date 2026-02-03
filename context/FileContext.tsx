@@ -1,6 +1,12 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback
+} from 'react'
 
 interface ItemArrayFiles {
   name: string
@@ -28,51 +34,38 @@ export function FilesProvider({ children }: { children: React.ReactNode }) {
       icon: 'description',
       color: 'orange'
     },
-    // {
-    //   name: 'skills.json',
-    //   path: '/skills',
-    //   icon: 'data_object',
-    //   color: 'yellow'
-    // },
     {
       name: 'experience.git',
       path: '/experience',
       icon: 'history',
       color: 'orange'
     }
-    // {
-    //   name: 'contact.tsx',
-    //   path: '/contact',
-    //   icon: 'javascript',
-    //   color: 'blue'
-    // }
   ])
 
-  const addFile = (file: ItemArrayFiles) => {
-    const findOne = filesList.find((item) => item.name === file.name)
-    if (!findOne) {
-      setFilesList([...filesList, file])
-    }
-  }
+  const addFile = useCallback(
+    (file: ItemArrayFiles) => {
+      const findOne = filesList.find((item) => item.name === file.name)
+      if (!findOne) {
+        setFilesList([...filesList, file])
+      }
+    },
+    [filesList]
+  )
 
-  const removeFile = (file: string) => {
-    const filterList = filesList.filter((item) => item.name !== file)
-    setFilesList(filterList)
-  }
+  const removeFile = useCallback((file: string) => {
+    setFilesList((prev) => prev.filter((item) => item.name !== file))
+  }, [])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Verificamos si es Ctrl + Ñ (o Ctrl + ñ)
       if (event.ctrlKey && (event.key === 'ñ' || event.key === 'Ñ')) {
-        event.preventDefault() // Evita comportamientos por defecto del navegador
+        event.preventDefault()
         setShowTerminal((prev) => !prev)
         console.log('Terminal toggled!')
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
-
-    // Limpieza al desmontar el componente
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
@@ -88,7 +81,7 @@ export function FilesProvider({ children }: { children: React.ReactNode }) {
 export function useFiles() {
   const context = useContext(FilesContext)
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider')
+    throw new Error('useFiles must be used within a FilesProvider')
   }
   return context
 }

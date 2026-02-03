@@ -55,7 +55,7 @@ export default function SobreMi() {
           {/* Foto de perfil */}
           <div className='relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary/20 mb-6'>
             <Image
-              src='https://res.cloudinary.com/dniekrmqb/image/upload/q_auto/v1736975908/eie39wrcbgdhayy5qqu8.webp'
+              src='https://res.cloudinary.com/dniekrmqb/image/upload/q_auto,w_500/v1736975908/eie39wrcbgdhayy5qqu8.webp'
               alt='Daniel Martel - Desarrollador Web'
               fill
               className='object-cover'
