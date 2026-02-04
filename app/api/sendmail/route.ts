@@ -1,18 +1,28 @@
+import {
+  sendTransactionalEmail,
+  sendAutomaticAsnwerEmail
+} from '@/services/sendMail.service'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    // Solo debería haber un registro de fotos (configuración del sitio)
+    const data = await req.json()
+
+    const sendEmail = await sendTransactionalEmail(data)
+    console.log('sendEmail', sendEmail)
+
+    const automaticAnswer = await sendAutomaticAsnwerEmail(data)
+    console.log(automaticAnswer)
 
     return NextResponse.json({
-      message: 'Configuración de fotos obtenida',
-      data: { key: 'value' }
+      message: `Enviado, recibiras un mensaje automatico al correo ${data.email}`
     })
   } catch (error) {
     console.error('Error obteniendo configuración de fotos:', error)
-    return NextResponse.json(
-      { message: 'Error interno al obtener configuración de fotos' },
-      { status: 500 }
-    )
+    const errorMessge =
+      error instanceof Error
+        ? error.message
+        : 'Error desconocido al enviar el correo'
+    return NextResponse.json({ message: errorMessge }, { status: 500 })
   }
 }

@@ -236,7 +236,10 @@ export default function Terminal() {
           <Fragment key={index}>{ele.html}</Fragment>
         ))}
 
-        <div className='flex items-center text-gray-400 mt-2'>
+        <div
+          onClick={() => setTerminalFocus(true)}
+          className='flex items-center text-gray-400 mt-2'
+        >
           <span className='text-primary font-bold mr-2'>➜</span>
           <span className='text-blue-400 mr-2'>~/projects/portfolio :</span>
           <input

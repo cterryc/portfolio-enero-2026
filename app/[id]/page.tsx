@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Eye, Info, Code, ExternalLink, Github } from 'lucide-react'
-import { projects, defaultProject, Project } from '@/lib/projects'
+import { projects } from '@/lib/projects'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -187,7 +187,7 @@ export default function ProjectExplorerPage() {
           </div>
         </div>
 
-        <div className='mt-6 grid grid-cols-2 md:grid-cols-4 gap-4'>
+        <div className='mt-6 grid grid-cols-2 md:grid-cols-4 gap-2'>
           {selectedProject.stats.map((stat) => (
             <div
               key={stat.label}
@@ -196,7 +196,7 @@ export default function ProjectExplorerPage() {
               <div className='text-xs text-gray-500 uppercase'>
                 {stat.label}
               </div>
-              <div className={`${stat.color} font-bold text-xl`}>
+              <div className={`${stat.color} font-bold text-base`}>
                 {stat.val}
               </div>
             </div>
@@ -214,7 +214,7 @@ export default function ProjectExplorerPage() {
                 key={index}
                 className='text-gray-400 text-sm flex items-start gap-2'
               >
-                <span className='text-primary mt-1'>•</span>
+                <span className='text-primary mb-1'>•</span>
                 {feature}
               </li>
             ))}
@@ -295,19 +295,19 @@ export default function ProjectExplorerPage() {
                 href={selectedProject.repoUrl}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='flex-1 bg-white hover:bg-gray-100 text-background-dark font-bold py-3 px-4 rounded flex items-center justify-center gap-2 transition-colors'
+                className='flex-1 bg-white hover:bg-gray-100 text-background-dark font-bold py-3 px-4 rounded flex items-center justify-center gap-1 transition-colors text-sm'
               >
                 <Github size={20} />
-                Ver Código Fuente
+                Código Fuente
               </a>
               <a
                 href={selectedProject.liveUrl}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='flex-1 bg-transparent hover:bg-white/5 border border-border-dark text-white font-bold py-3 px-4 rounded flex items-center justify-center gap-2 transition-colors'
+                className='flex-1 bg-transparent hover:bg-white/5 border border-border-dark text-white font-bold py-3 px-4 rounded flex items-center justify-center gap-1 transition-colors text-sm'
               >
                 <ExternalLink size={20} />
-                Ver Sitio en Vivo
+                Sitio en Vivo
               </a>
             </div>
 
@@ -329,13 +329,13 @@ export default function ProjectExplorerPage() {
                   return (
                     <React.Fragment key={index}>
                       <Link
-                        href={`/projects/${prevProject.id}`}
+                        href={`/${prevProject.id}`}
                         className='text-gray-400 hover:text-white text-sm flex items-center gap-2 transition-colors'
                       >
                         ← {prevProject.title.split(' ')[0]}
                       </Link>
                       <Link
-                        href={`/projects/${nextProject.id}`}
+                        href={`/${nextProject.id}`}
                         className='text-gray-400 hover:text-white text-sm flex items-center gap-2 transition-colors'
                       >
                         {nextProject.title.split(' ')[0]} →

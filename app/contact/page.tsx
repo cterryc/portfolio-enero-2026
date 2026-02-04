@@ -2,15 +2,22 @@
 
 import { Terminal as TerminalIcon } from 'lucide-react'
 import Form from 'next/form'
-// import { revalidatePath } from 'next/cache'
-// import { redirect } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
+
+interface EmeailResponse {
+  message: string
+}
+
+interface ErrorResponse {
+  message: string
+}
 
 export default function ContactPage() {
-  const [body, setBody] = useState({ name: '', message: '' })
+  const [body, setBody] = useState({ email: '', message: '', name: '' })
   const inputRef = useRef<HTMLInputElement>(null)
   const texttareaRef = useRef<HTMLTextAreaElement>(null)
-  const [taget, setTaget] = useState('')
+  const nameRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     console.log(body)
@@ -20,22 +27,61 @@ export default function ContactPage() {
     inputRef.current?.setSelectionRange(0, 0)
   }
 
+  const handleNameFocus = () => {
+    nameRef.current?.setSelectionRange(0, 0)
+  }
+
   const handleTextareaFocus = () => {
     texttareaRef.current?.setSelectionRange(0, 0)
   }
 
   async function createPost() {
-    // 'use server'
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-    if (!body.name && !body.message) {
-      alert('Campos "name" y "message" obligatorios')
+    if (!body.email || !body.message || !body.name) {
+      toast.error(
+        `${!body.name ? 'Nombre' : !body.email ? 'Correo' : !body.message ? 'Mensaje' : ''} es necesario`
+      )
+      return // Detenemos la ejecución
     }
-    const sendMail = await fetch('/api/sendmail', {
+
+    if (!emailRegex.test(body.email)) {
+      console.log('El correo electrónico proporcionado no es válido.')
+      toast.error(`${body.email} debe ser un correo valido`)
+      return // Detenemos la ejecución
+    }
+
+    const sendMail = fetch('/api/sendmail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorMessage = await response.json()
+          throw new Error(errorMessage.message)
+        }
+        return response.json()
+      })
+      .catch(async (error) => {
+        const errorMessage = error instanceof Error ? error.message : error
+
+        throw new Error(errorMessage)
+      })
+
+    toast.promise(sendMail, {
+      loading: 'Loading',
+      success: (data: EmeailResponse) => {
+        setBody({
+          email: '',
+          message: '',
+          name: ''
+        })
+        return data.message
+      },
+      error: (err: ErrorResponse) => err.message
     })
 
     // revalidatePath('/contact')
@@ -44,6 +90,7 @@ export default function ContactPage() {
 
   return (
     <div className='flex-1 overflow-hidden relative flex flex-col bg-panel-dark'>
+      <Toaster toastOptions={{ duration: 8000, className: 'w-96' }} />
       <div className='flex-1 overflow-y-auto p-4 md:p-8 font-mono text-sm md:text-base'>
         <Form className='w-full max-w-4xl' action={createPost}>
           <div className='flex group hover:bg-white/2'>
@@ -114,9 +161,9 @@ export default function ContactPage() {
             <div className='w-8 md:w-12 text-right pr-4 text-gray-600 select-none'>
               7
             </div>
-            <div className='flex-1 pl-8 flex items-center flex-wrap'>
+            <div className='flex-1 pl-8 flex items-center flex-wrap relative'>
               <label className='text-blue-300 mr-2 whitespace-nowrap'>
-                name:
+                nombre:
               </label>
               <span className='text-orange-300'>{'"'}</span>
               <input
@@ -137,16 +184,75 @@ export default function ContactPage() {
                 onClick={(e: React.MouseEvent<HTMLInputElement>) => {
                   console.log(e.currentTarget.name)
 
-                  if (
-                    e.currentTarget.name !== taget &&
-                    e.currentTarget.value === '"'
-                  ) {
-                    setTaget(e.currentTarget.name)
+                  if (e.currentTarget.value === '"') {
+                    // setTaget(e.currentTarget.name)
+                    handleNameFocus()
+                  }
+                }}
+                ref={nameRef}
+                name='name'
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  const cursorPosition = e.currentTarget.selectionStart
+                  const textLength = e.currentTarget.value.length
+                  if (e.key === 'Backspace') {
+                    if (cursorPosition === textLength) {
+                      nameRef.current?.setSelectionRange(
+                        e.currentTarget.value.length - 2,
+                        e.currentTarget.value.length - 1
+                      )
+                    }
+                  } else if (cursorPosition === textLength) {
+                    nameRef.current?.setSelectionRange(
+                      e.currentTarget.value.length,
+                      e.currentTarget.value.length - 1
+                    )
+                  }
+                }}
+              />
+              {/* <span className='absolute -bottom-5 bg-red-500'>
+                Email invalido
+              </span> */}
+              {body.name === '' && (
+                <span className='text-gray-500 absolute left-1/6 pointer-events-none'>
+                  {'//'} type your name here ...
+                </span>
+              )}
+            </div>
+          </div>
+          <div className='flex group hover:bg-white/2 items-center py-1 relative'>
+            <div className='w-8 md:w-12 text-right pr-4 text-gray-600 select-none'>
+              8
+            </div>
+            <div className='flex-1 pl-8 flex items-center flex-wrap relative'>
+              <label className='text-blue-300 mr-2 whitespace-nowrap'>
+                correo:
+              </label>
+              <span className='text-orange-300'>{'"'}</span>
+              <input
+                autoComplete='off'
+                className='bg-transparent border-none p-0 h-6 flex-1 min-w-50 text-orange-300 focus:ring-0 placeholder-gray-600/50 font-mono focus:bg-white/5 rounded-sm transition-colors outline-0'
+                placeholder='John Doe'
+                type='text'
+                required={true}
+                value={body.email + '"'}
+                onChange={(e) => {
+                  console.log(e.target.value.split('"').join(''))
+
+                  setBody({
+                    ...body,
+                    email: e.target.value.split('"').join('')
+                  })
+                }}
+                onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                  console.log(e.currentTarget.name)
+
+                  if (e.currentTarget.value === '"') {
+                    // setTaget(e.currentTarget.name)
                     handleInputFocus()
                   }
                 }}
                 ref={inputRef}
-                name='name'
+                name='email'
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   const cursorPosition = e.currentTarget.selectionStart
                   const textLength = e.currentTarget.value.length
@@ -165,20 +271,23 @@ export default function ContactPage() {
                   }
                 }}
               />
-              {body.name === '' && (
-                <span className='text-gray-500 absolute left-1/5'>
-                  {'//'} John Doe
+              {/* <span className='absolute -bottom-5 bg-red-500'>
+                Email invalido
+              </span> */}
+              {body.email === '' && (
+                <span className='text-gray-500 absolute left-1/6 pointer-events-none'>
+                  {'//'} type your email here ...
                 </span>
               )}
             </div>
           </div>
           <div className='flex group hover:bg-white/2 items-start py-1'>
             <div className='w-8 md:w-12 text-right pr-4 text-gray-600 select-none pt-1'>
-              10
+              9
             </div>
-            <div className='flex-1 pl-8 flex items-start flex-wrap'>
+            <div className='flex-1 pl-8 flex items-start flex-wrap relative'>
               <label className='text-blue-300 mr-2 whitespace-nowrap pt-1'>
-                message:
+                mensaje:
               </label>
               <span className='text-orange-300 pt-1'>{'"'}</span>
               <textarea
@@ -199,7 +308,7 @@ export default function ContactPage() {
                   console.log(e.currentTarget.name)
 
                   if (e.currentTarget.value === '"') {
-                    setTaget(e.currentTarget.name)
+                    // setTaget(e.currentTarget.name)
                     handleTextareaFocus()
                   }
                 }}
@@ -224,7 +333,7 @@ export default function ContactPage() {
                 }}
               ></textarea>
               {body.message === '' && (
-                <span className='text-gray-500 absolute left-1/4'>
+                <span className='text-gray-500 absolute left-1/5 pointer-events-none'>
                   {'//'} Type your message here...
                 </span>
               )}
@@ -232,7 +341,7 @@ export default function ContactPage() {
           </div>
           <div className='flex group hover:bg-white/2 py-2'>
             <div className='w-8 md:w-12 text-right pr-4 text-gray-600 select-none pt-2'>
-              13
+              10
             </div>
             <div className='flex-1 pl-4'>
               <button

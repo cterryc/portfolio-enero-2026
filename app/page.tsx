@@ -12,7 +12,8 @@ import {
   Award,
   ExternalLink,
   Linkedin,
-  Github
+  Github,
+  Mail
 } from 'lucide-react'
 import Link from 'next/link'
 import { useFiles } from '@/context/FileContext'
@@ -36,17 +37,17 @@ export default function SobreMi() {
       titulo: 'Full Stack Web Developer',
       institucion: 'Henry Bootcamp',
       periodo: 'Mayo 2022 - Mayo 2023'
-    },
-    {
-      titulo: 'HTML/CSS',
-      institucion: 'Udemy',
-      periodo: '2020'
-    },
-    {
-      titulo: 'Escuela de Javascript',
-      institucion: 'Udemy',
-      periodo: '2021'
     }
+    // {
+    //   titulo: 'HTML/CSS',
+    //   institucion: 'Udemy',
+    //   periodo: '2020'
+    // },
+    // {
+    //   titulo: 'Escuela de Javascript',
+    //   institucion: 'Udemy',
+    //   periodo: '2021'
+    // }
   ]
 
   return (
@@ -99,12 +100,20 @@ export default function SobreMi() {
               <Linkedin className='w-6 h-6' />
             </a>
             <a
-              href='https://github.com/developer-martel'
+              href='https://github.com/cterryc'
               target='_blank'
               rel='noopener noreferrer'
               className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
             >
               <Github className='w-6 h-6' />
+            </a>
+            <a
+              href='mailto:danyel.martel@gmail.com'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
+            >
+              <Mail className='w-6 h-6' />
             </a>
           </div>
 
@@ -127,6 +136,12 @@ export default function SobreMi() {
         <div className='p-6 md:p-8 max-w-3xl mx-auto'>
           {/* Sección: Sobre mí */}
           <div className='mb-10'>
+            <div className='flex items-center gap-3 mb-6'>
+              <h2 className='text-lg font-bold text-white'>
+                Full Stack Developer - 2 años construyendo aplicaciones
+                escalables con React, Node.js y PostgreSQL.
+              </h2>
+            </div>
             <div className='flex items-center gap-3 mb-6'>
               <User className='text-primary w-7 h-7' />
               <h2 className='text-2xl font-bold text-white'>Sobre Mí</h2>
@@ -223,7 +238,7 @@ export default function SobreMi() {
               onClick={() => {
                 addFile({
                   color: 'blue',
-                  icon: 'javascript',
+                  icon: 'description',
                   name: 'saviorperu.tsx',
                   path: '/saviorperu'
                 })

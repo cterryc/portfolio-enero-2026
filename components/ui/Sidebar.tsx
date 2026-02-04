@@ -10,7 +10,10 @@ import {
   FileText,
   Terminal,
   MoreHorizontal,
-  ChevronRight
+  ChevronRight,
+  Linkedin,
+  Github,
+  Mail
 } from 'lucide-react'
 import { useFiles } from '@/context/FileContext'
 import { projects } from '@/lib/projects'
@@ -85,7 +88,7 @@ export default function Sidebar() {
           </div>
           <div className='pl-8 flex flex-col gap-0.5'>
             {projects.map((file) => {
-              const Icon = iconMap['javascript']
+              const Icon = iconMap['description']
               return (
                 <button
                   key={file.id}
@@ -98,7 +101,7 @@ export default function Sidebar() {
                   onClick={() => {
                     addFile({
                       color: 'blue',
-                      icon: 'javascript',
+                      icon: 'description',
                       name: file.id + '.tsx',
                       path: '/' + file.id
                     })
@@ -124,6 +127,32 @@ export default function Sidebar() {
             {linkComponent('/contact', 'blue', 'contact.tsx', 'javascript')}
           </div>
         </div>
+      </div>
+      <div className='flex gap-4 mb-8 w-full justify-center'>
+        <a
+          href='https://www.linkedin.com/in/developer-martel/'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='bg-[#0A66C2] hover:bg-[#0A66C2]/90 text-white p-3 rounded-lg transition-colors'
+        >
+          <Linkedin className='w-6 h-6' />
+        </a>
+        <a
+          href='https://github.com/cterryc'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
+        >
+          <Github className='w-6 h-6' />
+        </a>
+        <a
+          href='mailto:danyel.martel@gmail.com'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
+        >
+          <Mail className='w-6 h-6' />
+        </a>
       </div>
     </aside>
   )
