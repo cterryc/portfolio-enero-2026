@@ -55,3 +55,30 @@ export interface MessageData {
   email?: string
   message: string
 }
+
+export interface Project {
+  id: string
+  title: string
+  description: string
+  longDescription: string
+  liveUrl: string
+  repoUrl: string
+  imageUrl: string
+  technologies: string[]
+  features: string[]
+  stats: {
+    label: string
+    val: string
+    color: string
+  }[]
+  codeSnippet: {
+    file: string
+    language: string
+    lines: string[]
+  }
+}
+
+export interface ProjectsContextProps {
+  projects: Project[]
+  projectsErrorFetch: string
+}

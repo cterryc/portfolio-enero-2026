@@ -17,15 +17,11 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useFiles } from '@/context/FileContext'
+import { useProjects } from '@/context/ProjectsContext'
 
 export default function SobreMi() {
   const { addFile } = useFiles()
-  // const tecnologias = {
-  //   frontend: ['React.js', 'Next.js', 'Vite', 'Tailwind', 'ReduxToolkit'],
-  //   backend: ['Node.js', 'Express', 'Sequelize', 'NestJS', 'Prisma'],
-  //   basesDeDatos: ['PostgreSQL', 'MongoDB'],
-  //   herramientas: ['Git', 'GitHub', 'Vercel', 'Render', 'Postman', 'JWT']
-  // }
+  const { projects } = useProjects()
 
   const educacion = [
     {
@@ -231,23 +227,25 @@ export default function SobreMi() {
           </div>
 
           {/* Enlace al portafolio */}
-          <div className='mt-10 pt-6 border-t border-border-dark'>
-            <Link
-              href='/saviorperu'
-              className='inline-flex items-center gap-2 text-primary hover:text-green-400 transition-colors'
-              onClick={() => {
-                addFile({
-                  color: 'blue',
-                  icon: 'description',
-                  name: 'saviorperu.tsx',
-                  path: '/saviorperu'
-                })
-              }}
-            >
-              <span>Ver mis proyectos</span>
-              <ExternalLink className='w-4 h-4' />
-            </Link>
-          </div>
+          {!!projects.length && (
+            <div className='mt-10 pt-6 border-t border-border-dark'>
+              <Link
+                href={'/' + projects[0].id}
+                className='inline-flex items-center gap-2 text-primary hover:text-green-400 transition-colors'
+                onClick={() => {
+                  addFile({
+                    color: 'blue',
+                    icon: 'description',
+                    name: projects[0].id + '.tsx',
+                    path: '/' + projects[0].id
+                  })
+                }}
+              >
+                <span>Ver mis proyectos</span>
+                <ExternalLink className='w-4 h-4' />
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

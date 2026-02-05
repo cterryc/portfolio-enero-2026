@@ -16,8 +16,7 @@ import {
   Mail
 } from 'lucide-react'
 import { useFiles } from '@/context/FileContext'
-import { projects } from '@/lib/projects'
-// import { useRouter } from 'next/na'
+import { useProjects } from '@/context/ProjectsContext'
 
 const iconMap = {
   javascript: File,
@@ -30,6 +29,7 @@ const iconMap = {
 export default function Sidebar() {
   const pathname = usePathname()
   const { addFile } = useFiles()
+  const { projects } = useProjects()
   const navigate = useRouter()
 
   const linkComponent = (
@@ -87,40 +87,41 @@ export default function Sidebar() {
             <span>Proyectos</span>
           </div>
           <div className='pl-8 flex flex-col gap-0.5'>
-            {projects.map((file) => {
-              const Icon = iconMap['description']
-              return (
-                <button
-                  key={file.id}
-                  // href={`/${file.id}`}
-                  className={`flex items-center gap-2 px-3 py-1.5 w-full text-left transition-colors group ${
-                    pathname === '/' + file.id
-                      ? 'bg-primary/10 border-l-2 border-primary'
-                      : 'hover:bg-white/5'
-                  }`}
-                  onClick={() => {
-                    addFile({
-                      color: 'blue',
-                      icon: 'description',
-                      name: file.id + '.tsx',
-                      path: '/' + file.id
-                    })
-                    navigate.push(`/${file.id}`)
-                  }}
-                >
-                  <Icon className={`text-blue-400 text-[18px]`} />
-                  <span
-                    className={`text-sm ${
+            {!!projects.length &&
+              projects.map((file) => {
+                const Icon = iconMap['description']
+                return (
+                  <button
+                    key={file.id}
+                    // href={`/${file.id}`}
+                    className={`flex items-center gap-2 px-3 py-1.5 w-full text-left transition-colors group ${
                       pathname === '/' + file.id
-                        ? 'text-white font-medium'
-                        : 'text-gray-400 group-hover:text-white'
+                        ? 'bg-primary/10 border-l-2 border-primary'
+                        : 'hover:bg-white/5'
                     }`}
+                    onClick={() => {
+                      addFile({
+                        color: 'blue',
+                        icon: 'description',
+                        name: file.id + '.tsx',
+                        path: '/' + file.id
+                      })
+                      navigate.push(`/${file.id}`)
+                    }}
                   >
-                    {file.id + '.tsx'}
-                  </span>
-                </button>
-              )
-            })}
+                    <Icon className={`text-blue-400 text-[18px]`} />
+                    <span
+                      className={`text-sm ${
+                        pathname === '/' + file.id
+                          ? 'text-white font-medium'
+                          : 'text-gray-400 group-hover:text-white'
+                      }`}
+                    >
+                      {file.id + '.tsx'}
+                    </span>
+                  </button>
+                )
+              })}
           </div>
           <div className='mt-2 px-2'>
             {linkComponent('/skills', 'yellow', 'skills.json', 'data_object')}

@@ -1,24 +1,4 @@
-export interface Project {
-  id: string
-  title: string
-  description: string
-  longDescription: string
-  liveUrl: string
-  repoUrl: string
-  imageUrl: string
-  technologies: string[]
-  features: string[]
-  stats: {
-    label: string
-    val: string
-    color: string
-  }[]
-  codeSnippet: {
-    file: string
-    language: string
-    lines: string[]
-  }
-}
+import { Project } from './types'
 
 export const projects: Project[] = [
   {
@@ -531,4 +511,4 @@ export const projects: Project[] = [
 ]
 
 // Proyecto por defecto
-export const defaultProject = projects[0]
+// export const defaultProject = projects[0]

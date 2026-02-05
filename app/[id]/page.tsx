@@ -3,11 +3,15 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Eye, Info, Code, ExternalLink, Github } from 'lucide-react'
-import { projects } from '@/lib/projects'
+// import { projects } from '@/lib/projects'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import { useProjects } from '@/context/ProjectsContext'
+import { useFiles } from '@/context/FileContext'
 
 export default function ProjectExplorerPage() {
+  const { projects } = useProjects()
+  const { addFile, filesList } = useFiles()
   const params = useParams()
   const [selectedProject, setSelectedProject] = useState({
     id: '',
@@ -39,11 +43,23 @@ export default function ProjectExplorerPage() {
     if (params.id) {
       const project = projects.find((p) => p.id === params.id)
       if (project) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        const findFromFileList = filesList.find((file) => {
+          return file.path === params.id
+        })
+
+        if (!findFromFileList) {
+          addFile({
+            color: 'blue',
+            icon: 'description',
+            name: project.id + '.tsx',
+            path: '/' + project.id
+          })
+        }
         setSelectedProject(project)
       }
     }
-  }, [params.id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id, projects])
 
   // Manejar error en imagen
   const handleImageError = () => {
@@ -196,7 +212,7 @@ export default function ProjectExplorerPage() {
               <div className='text-xs text-gray-500 uppercase'>
                 {stat.label}
               </div>
-              <div className={`${stat.color} font-bold text-base`}>
+              <div className={`text-${stat.color}-400 font-bold text-base`}>
                 {stat.val}
               </div>
             </div>

@@ -7,6 +7,7 @@ import Terminal from '@/components/ui/Terminal'
 // Importamos nuestro nuevo componente de cliente
 import DynamicStatusBar from '@/components/DynamicStatusBar'
 import { FilesProvider } from '@/context/FileContext'
+import { ProjectsProvider } from '@/context/ProjectsContext'
 
 // Puedes agregar metadata ahora que es un Server Component
 export const metadata = {
@@ -21,18 +22,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang='en' className='dark'>
       <body className='bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-gray-300 h-screen overflow-hidden flex flex-col selection:bg-primary/30 selection:text-primary'>
         <FilesProvider>
-          <div className='flex flex-col h-screen overflow-hidden'>
-            <div className='flex flex-1 overflow-hidden'>
-              <Sidebar />
-              <main className='flex-1 flex flex-col min-w-0 bg-panel-dark'>
-                <TabsBar />
-                {children}
-                <Terminal />
-              </main>
+          <ProjectsProvider>
+            <div className='flex flex-col h-screen overflow-hidden'>
+              <div className='flex flex-1 overflow-hidden'>
+                <Sidebar />
+                <main className='flex-1 flex flex-col min-w-0 bg-panel-dark'>
+                  <TabsBar />
+                  {children}
+                  <Terminal />
+                </main>
+              </div>
+              {/* Renderizamos el componente cliente aquí */}
+              <DynamicStatusBar />
             </div>
-            {/* Renderizamos el componente cliente aquí */}
-            <DynamicStatusBar />
-          </div>
+          </ProjectsProvider>
         </FilesProvider>
       </body>
     </html>
