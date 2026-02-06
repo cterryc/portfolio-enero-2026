@@ -20,7 +20,10 @@ export default function TabsBar() {
   }
 
   return (
-    <div className='flex h-10 bg-background-dark border-b border-border-dark overflow-x-auto no-scrollbar'>
+    <div
+      className='flex h-10 bg-background-dark border-b border-border-dark overflow-x-auto no-scrollbar'
+      id='tabsbar'
+    >
       {filesList.map((tab, i) => {
         const Icon = iconMap[tab.icon as keyof typeof iconMap]
         return (

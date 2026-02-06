@@ -23,6 +23,6 @@ export async function POST(req: NextRequest) {
       error instanceof Error
         ? error.message
         : 'Error desconocido al enviar el correo'
-    return NextResponse.json({ message: errorMessge }, { status: 500 })
+    return NextResponse.json({ error: errorMessge }, { status: 500 })
   }
 }

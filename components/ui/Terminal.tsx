@@ -193,7 +193,10 @@ export default function Terminal() {
   }
 
   return (
-    <div className='h-48 border-t border-border-dark bg-background-dark flex flex-col shrink-0'>
+    <div
+      className='h-48 border-t border-border-dark bg-background-dark flex flex-col shrink-0'
+      id='terminal'
+    >
       <div className='flex items-center px-4 gap-6 border-b border-border-dark h-9'>
         <button className='text-xs font-bold text-white border-b-2 border-primary h-full pt-1'>
           TERMINAL
@@ -260,7 +263,7 @@ export default function Terminal() {
 
         <div className='text-gray-500 text-xs mt-2 opacity-50'>
           💡 Tip: Presiona ↑/↓ para navegar por el historial, Tab para
-          autocompletar
+          autocompletar, {'"Ctrl + ñ"'} para cerrar/abrir terminal
         </div>
       </div>
     </div>

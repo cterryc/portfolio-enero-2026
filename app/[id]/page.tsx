@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { Eye, Info, Code, ExternalLink, Github } from 'lucide-react'
 // import { projects } from '@/lib/projects'
 import { useParams } from 'next/navigation'
-import Link from 'next/link'
 import { useProjects } from '@/context/ProjectsContext'
 import { useFiles } from '@/context/FileContext'
 
@@ -24,10 +23,10 @@ export default function ProjectExplorerPage() {
     technologies: ['', ''],
     features: ['', '', ''],
     stats: [
-      { label: 'Performance', val: '--', color: 'text-gray-400' },
-      { label: 'SEO', val: '--', color: 'text-gray-400' },
-      { label: 'Accessibility', val: '--', color: 'text-gray-400' },
-      { label: 'Commits', val: '--', color: 'text-gray-400' }
+      { label: 'Performance', val: '--', color: 'gray' },
+      { label: 'SEO', val: '--', color: 'gray' },
+      { label: 'Accessibility', val: '--', color: 'gray' },
+      { label: 'Commits', val: '--', color: 'gray' }
     ],
     codeSnippet: {
       file: '',
@@ -146,100 +145,8 @@ export default function ProjectExplorerPage() {
 
   return (
     <div className='flex-1 flex flex-col lg:flex-row overflow-hidden'>
-      {/* Panel izquierdo: Vista previa visual */}
-      <div className='flex-1 lg:w-1/2 p-6 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border-dark bg-panel-dark'>
-        <div className='bg-background-dark rounded-xl overflow-hidden shadow-2xl border border-border-dark'>
-          <div className='h-8 bg-[#1a2e24] flex items-center px-4 gap-2 border-b border-border-dark'>
-            <div className='flex gap-1.5'>
-              <div className='w-3 h-3 rounded-full bg-red-500/80'></div>
-              <div className='w-3 h-3 rounded-full bg-yellow-500/80'></div>
-              <div className='w-3 h-3 rounded-full bg-green-500/80'></div>
-            </div>
-            <div className='flex-1 flex justify-center'>
-              <div className='bg-black/20 px-3 py-0.5 rounded text-[10px] text-gray-500 font-mono truncate max-w-50'>
-                {selectedProject.liveUrl.replace('https://', '')}
-              </div>
-            </div>
-          </div>
-          <div className='relative aspect-video w-full bg-gray-900 group'>
-            {!imageError && selectedProject.imageUrl ? (
-              <Image
-                alt={`Captura de ${selectedProject.title}`}
-                src={selectedProject.imageUrl}
-                fill
-                className='object-cover opacity-90 group-hover:opacity-100 transition-opacity'
-                onError={handleImageError}
-              />
-            ) : (
-              <div
-                className='absolute inset-0 bg-linear-to-br from-gray-900 to-gray-800 flex items-center justify-center'
-                style={{
-                  backgroundImage: `url("${placeholderImage}")`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}
-              />
-            )}
-            <div className='absolute inset-0 flex flex-col gap-1 items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]'>
-              <a
-                href={selectedProject.liveUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='bg-primary hover:bg-green-400 text-background-dark font-bold py-2 px-6 rounded-lg flex items-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300'
-              >
-                <Eye size={18} />
-                Ver Demo en Vivo
-              </a>
-              <a
-                href={selectedProject.repoUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='bg-white hover:bg-gray-200 text-background-dark font-bold py-2 px-6 rounded-lg flex items-center justify-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 w-full max-w-52'
-              >
-                <Github size={18} />
-                Ver Código
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className='mt-6 grid grid-cols-2 md:grid-cols-4 gap-2'>
-          {selectedProject.stats.map((stat) => (
-            <div
-              key={stat.label}
-              className='bg-background-dark p-3 rounded-lg border border-border-dark'
-            >
-              <div className='text-xs text-gray-500 uppercase'>
-                {stat.label}
-              </div>
-              <div className={`text-${stat.color}-400 font-bold text-base`}>
-                {stat.val}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className='mt-6 bg-background-dark p-4 rounded-lg border border-border-dark'>
-          <h3 className='text-white font-bold mb-3 flex items-center gap-2'>
-            <Info size={18} className='text-primary' />
-            Características Principales
-          </h3>
-          <ul className='space-y-2'>
-            {selectedProject.features.slice(0, 4).map((feature, index) => (
-              <li
-                key={index}
-                className='text-gray-400 text-sm flex items-start gap-2'
-              >
-                <span className='text-primary mb-1'>•</span>
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Panel derecho: Código/Detalles */}
-      <div className='flex-1 lg:w-1/2 overflow-y-auto bg-panel-dark relative'>
+      {/* Panel izquierdo: Código/Detalles */}
+      <div className='flex-1 overflow-y-auto bg-panel-dark relative border-b lg:border-b-0 lg:border-r border-border-dark'>
         <div className='p-8 max-w-3xl mx-auto'>
           <div className='mb-6'>
             <p className='font-mono text-primary text-sm mb-2'>
@@ -326,42 +233,99 @@ export default function ProjectExplorerPage() {
                 Sitio en Vivo
               </a>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div className='mt-8 pt-6 border-t border-white/5'>
-              <div className='flex justify-between'>
-                {projects.map((project, index) => {
-                  const currentIndex = projects.findIndex(
-                    (p) => p.id === selectedProject.id
-                  )
-                  const prevProject =
-                    projects[
-                      currentIndex > 0 ? currentIndex - 1 : projects.length - 1
-                    ]
-                  const nextProject =
-                    projects[
-                      currentIndex < projects.length - 1 ? currentIndex + 1 : 0
-                    ]
-
-                  return (
-                    <React.Fragment key={index}>
-                      <Link
-                        href={`/${prevProject.id}`}
-                        className='text-gray-400 hover:text-white text-sm flex items-center gap-2 transition-colors'
-                      >
-                        ← {prevProject.title.split(' ')[0]}
-                      </Link>
-                      <Link
-                        href={`/${nextProject.id}`}
-                        className='text-gray-400 hover:text-white text-sm flex items-center gap-2 transition-colors'
-                      >
-                        {nextProject.title.split(' ')[0]} →
-                      </Link>
-                    </React.Fragment>
-                  ) // Solo renderizamos el par actual para no duplicar enlaces
-                })}
+      {/* Panel derecho: Vista previa visual */}
+      <div className='flex-1 p-6 overflow-y-auto  bg-panel-dark lg:max-w-96'>
+        <div className='bg-background-dark rounded-xl overflow-hidden shadow-2xl border border-border-dark'>
+          <div className='h-8 bg-[#1a2e24] flex items-center px-4 gap-2 border-b border-border-dark'>
+            <div className='flex gap-1.5'>
+              <div className='w-3 h-3 rounded-full bg-red-500/80'></div>
+              <div className='w-3 h-3 rounded-full bg-yellow-500/80'></div>
+              <div className='w-3 h-3 rounded-full bg-green-500/80'></div>
+            </div>
+            <div className='flex-1 flex justify-center'>
+              <div className='bg-black/20 px-3 py-0.5 rounded text-[10px] text-gray-500 font-mono truncate max-w-50'>
+                {selectedProject.liveUrl.replace('https://', '')}
               </div>
             </div>
           </div>
+          <div className='relative aspect-video w-full bg-gray-900 group'>
+            {!imageError && selectedProject.imageUrl ? (
+              <Image
+                alt={`Captura de ${selectedProject.title}`}
+                src={selectedProject.imageUrl}
+                fill
+                className='object-cover opacity-90 group-hover:opacity-100 transition-opacity'
+                onError={handleImageError}
+              />
+            ) : (
+              <div
+                className='absolute inset-0 bg-linear-to-br from-gray-900 to-gray-800 flex items-center justify-center'
+                style={{
+                  backgroundImage: `url("${placeholderImage}")`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              />
+            )}
+            <div className='absolute inset-0 flex flex-col gap-1 items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]'>
+              <a
+                href={selectedProject.liveUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='bg-primary hover:bg-green-400 text-background-dark font-bold py-2 px-6 rounded-lg flex items-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300'
+              >
+                <Eye size={18} />
+                Ver Demo en Vivo
+              </a>
+              <a
+                href={selectedProject.repoUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='bg-white hover:bg-gray-200 text-background-dark font-bold py-2 px-6 rounded-lg flex items-center justify-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 w-full max-w-52'
+              >
+                <Github size={18} />
+                Ver Código
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className='mt-3 grid grid-cols-2 gap-2'>
+          {selectedProject.stats.map((stat) => (
+            <div
+              key={stat.label}
+              className='bg-background-dark p-3 rounded-lg border border-border-dark'
+            >
+              <div className='text-xs text-gray-500 uppercase'>
+                {stat.label}
+              </div>
+              <div className={`text-${stat.color}-400 font-bold text-base`}>
+                {stat.val}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className='mt-3 bg-background-dark p-4 rounded-lg border border-border-dark'>
+          <h3 className='text-white font-bold mb-3 flex items-center gap-2'>
+            <Info size={18} className='text-primary' />
+            Características Principales
+          </h3>
+          <ul className='space-y-2'>
+            {selectedProject.features.slice(0, 4).map((feature, index) => (
+              <li
+                key={index}
+                className='text-gray-400 text-sm flex items-start gap-2'
+              >
+                <span className='text-primary mb-1'>•</span>
+                {feature}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
-const { EMAIL_FROM, USER_FROM, API_KEY_BREVO } = process.env
+import { ENV } from '@/config/env'
+
+const { EMAIL_FROM, USER_FROM, API_KEY_BREVO } = ENV
 
 // 1. Interfaces mejoradas
 interface ContactFormData {

@@ -36,15 +36,15 @@ export const projects: Project[] = [
       'Sistema de stock y estados de producto'
     ],
     stats: [
-      { label: 'Performance', val: '94%', color: 'text-green-400' },
-      { label: 'SEO', val: '92%', color: 'text-blue-400' },
-      { label: 'Accessibility', val: '89%', color: 'text-yellow-400' },
-      { label: 'Commits', val: '102+', color: 'text-purple-400' },
-      { label: 'Produc. gestionados', val: '50+', color: 'text-green-400' },
+      { label: 'Performance', val: '94%', color: 'green' },
+      { label: 'SEO', val: '92%', color: 'blue' },
+      { label: 'Accessibility', val: '89%', color: 'yellow' },
+      { label: 'Commits', val: '102+', color: 'purple' },
+      { label: 'Produc. gestionados', val: '50+', color: 'green' },
       {
         label: 'Tiempo desarrollo',
         val: '30 días',
-        color: 'text-blue-400'
+        color: 'blue'
       }
     ],
     codeSnippet: {
@@ -109,12 +109,12 @@ export const projects: Project[] = [
       'Panel administrativo con CRUD completo'
     ],
     stats: [
-      { label: 'Performance', val: '92%', color: 'text-green-400' },
-      { label: 'Seo', val: '92%', color: 'text-blue-400' },
-      { label: 'Accessibility', val: '90%', color: 'text-yellow-400' },
-      { label: 'Commits', val: '30+', color: 'text-purple-400' },
-      { label: 'Capacidad', val: '7 asientos', color: 'text-green-400' },
-      { label: 'Rutas activas', val: '2', color: 'text-blue-400' }
+      { label: 'Performance', val: '92%', color: 'green' },
+      { label: 'Seo', val: '92%', color: 'blue' },
+      { label: 'Accessibility', val: '90%', color: 'yellow' },
+      { label: 'Commits', val: '30+', color: 'purple' },
+      { label: 'Capacidad', val: '7 asientos', color: 'green' },
+      { label: 'Rutas activas', val: '2', color: 'blue' }
     ],
     codeSnippet: {
       file: 'src/controllers/reservations.controller.js (API - Gestión de Reservas)',
@@ -176,10 +176,10 @@ export const projects: Project[] = [
       'Persistencia de estado en frontend con redux-persist'
     ],
     stats: [
-      { label: 'Performance', val: '100%', color: 'text-green-400' },
-      { label: 'SEO', val: '88%', color: 'text-blue-400' },
-      { label: 'Accessibility', val: '95%', color: 'text-yellow-400' },
-      { label: 'Commits', val: '125+', color: 'text-blue-400' }
+      { label: 'Performance', val: '100%', color: 'green' },
+      { label: 'SEO', val: '88%', color: 'blue' },
+      { label: 'Accessibility', val: '95%', color: 'yellow' },
+      { label: 'Commits', val: '125+', color: 'blue' }
     ],
     codeSnippet: {
       file: 'scraper-service/index.js (Backend – Microservicio de Scraping)',
@@ -281,10 +281,10 @@ export const projects: Project[] = [
       'Páginas de detalle por template'
     ],
     stats: [
-      { label: 'Performance', val: '99%', color: 'text-green-400' },
-      { label: 'Seo', val: '92', color: 'text-blue-400' },
-      { label: 'Accessibility', val: '95', color: 'text-yellow-400' },
-      { label: 'Commits', val: '6+', color: 'text-purple-400' }
+      { label: 'Performance', val: '99%', color: 'green' },
+      { label: 'Seo', val: '92', color: 'blue' },
+      { label: 'Accessibility', val: '95', color: 'yellow' },
+      { label: 'Commits', val: '6+', color: 'purple' }
     ],
     codeSnippet: {
       file: 'components/PackageCard.tsx (Sistema de Paquetes - Lógica de CTA)',
@@ -373,10 +373,10 @@ export const projects: Project[] = [
       'Migraciones de base de datos con TypeORM'
     ],
     stats: [
-      { label: 'Módulos API', val: '6+', color: 'text-blue-400' },
-      { label: 'Entidades', val: '5+', color: 'text-green-400' },
-      { label: 'Estados de Solicitud', val: '12', color: 'text-purple-400' },
-      { label: 'Roles de Usuario', val: '3', color: 'text-yellow-400' }
+      { label: 'Módulos API', val: '6+', color: 'blue' },
+      { label: 'Entidades', val: '5+', color: 'green' },
+      { label: 'Estados de Solicitud', val: '12', color: 'purple' },
+      { label: 'Roles de Usuario', val: '3', color: 'yellow' }
     ],
     codeSnippet: {
       file: 'backend/src/config/middlewares.config.ts (Backend – Configuración de Seguridad)',
@@ -460,10 +460,10 @@ export const projects: Project[] = [
       'Frontend responsive con React y Redux'
     ],
     stats: [
-      { label: 'Performance', val: '94%', color: 'text-green-400' },
-      { label: 'SEO', val: '85%', color: 'text-blue-400' },
-      { label: 'Accessibility', val: '89%', color: 'text-yellow-400' },
-      { label: 'Commits', val: '64', color: 'text-purple-400' }
+      { label: 'Performance', val: '94%', color: 'green' },
+      { label: 'SEO', val: '85%', color: 'blue' },
+      { label: 'Accessibility', val: '89%', color: 'yellow' },
+      { label: 'Commits', val: '64', color: 'purple' }
     ],
     codeSnippet: {
       file: 'actions/gamesActions.js',

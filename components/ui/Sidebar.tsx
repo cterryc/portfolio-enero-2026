@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   Folder,
+  FolderOpen,
   File,
   FileJson,
   GitCommit,
@@ -17,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useFiles } from '@/context/FileContext'
 import { useProjects } from '@/context/ProjectsContext'
+import { useState } from 'react'
 
 const iconMap = {
   javascript: File,
@@ -26,23 +28,33 @@ const iconMap = {
   terminal: Terminal
 }
 
+const namesFiles = {
+  about: 'Sobre Mí',
+  experience: 'Experiencia',
+  skills: 'Habilidades',
+  contact: 'Contacto'
+}
+
 export default function Sidebar() {
   const pathname = usePathname()
   const { addFile } = useFiles()
   const { projects } = useProjects()
   const navigate = useRouter()
+  const [openFolder, setOpenFolder] = useState(true)
 
   const linkComponent = (
     path: string,
-    color = 'gray',
+    color: string,
     name: string,
     icon: string
   ) => {
     const Icon = iconMap[icon as keyof typeof iconMap]
+    const splitName = name.split('.')[0] as 'about'
+    const nameFile = namesFiles[splitName]
     return (
       <Link
         href={path}
-        className={`flex items-center gap-2 px-3 py-1.5 w-full text-left hover:bg-white/5 group ${
+        className={`flex items-center gap-2 px-3 py-1.5 mb-0.5 w-full text-left hover:bg-white/5 group cursor-pointer ${
           pathname === path
             ? 'bg-primary/10 border-l-2 border-primary'
             : 'hover:bg-white/5'
@@ -53,7 +65,7 @@ export default function Sidebar() {
       >
         <Icon className={`text-${color}-400 text-[18px]`} />
         <span className='text-sm text-gray-400 group-hover:text-white'>
-          {name}
+          {nameFile}
         </span>
       </Link>
     )
@@ -72,7 +84,7 @@ export default function Sidebar() {
             PORTFOLIO-V2
           </button>
         </div>
-        <div className='flex flex-col gap-0.5 mt-1'>
+        <div className='flex flex-col gap-0 mt-1' id='sidebar'>
           <div className='mt-2 px-2'>
             {linkComponent('/', 'orange', 'about.md', 'description')}
             {linkComponent(
@@ -82,19 +94,29 @@ export default function Sidebar() {
               'history'
             )}
           </div>
-          <div className='pl-5 py-1 flex items-center gap-1.5 text-sm text-gray-400'>
-            <Folder className='text-[16px]' />
+          <div
+            className='pl-3 py-1 mx-2 mb-0.5 flex items-center gap-1.5 text-sm text-gray-400 cursor-pointer hover:bg-white/5'
+            onClick={() => {
+              setOpenFolder(!openFolder)
+            }}
+          >
+            {projects.length && openFolder ? (
+              <FolderOpen className='text-[16px]' />
+            ) : (
+              <Folder className='text-[16px]' />
+            )}
             <span>Proyectos</span>
           </div>
           <div className='pl-8 flex flex-col gap-0.5'>
             {!!projects.length &&
+              openFolder &&
               projects.map((file) => {
                 const Icon = iconMap['description']
                 return (
                   <button
                     key={file.id}
                     // href={`/${file.id}`}
-                    className={`flex items-center gap-2 px-3 py-1.5 w-full text-left transition-colors group ${
+                    className={`flex items-center gap-2 px-3 py-1.5 w-full text-left transition-colors group cursor-pointer ${
                       pathname === '/' + file.id
                         ? 'bg-primary/10 border-l-2 border-primary'
                         : 'hover:bg-white/5'
@@ -117,19 +139,19 @@ export default function Sidebar() {
                           : 'text-gray-400 group-hover:text-white'
                       }`}
                     >
-                      {file.id + '.tsx'}
+                      {file.title.split(' - ')[0]}
                     </span>
                   </button>
                 )
               })}
           </div>
-          <div className='mt-2 px-2'>
-            {linkComponent('/skills', 'yellow', 'skills.json', 'data_object')}
+          <div className='px-2'>
+            {linkComponent('/skills', 'green', 'skills.json', 'data_object')}
             {linkComponent('/contact', 'blue', 'contact.tsx', 'javascript')}
           </div>
         </div>
       </div>
-      <div className='flex gap-4 mb-8 w-full justify-center'>
+      <div className='flex gap-4 mb-8 w-full justify-center' id='redes'>
         <a
           href='https://www.linkedin.com/in/developer-martel/'
           target='_blank'

@@ -1,12 +1,15 @@
+import { ENV } from '@/config/env'
 import { PrismaClient } from '../lib/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
+
+const { DATABASE_URL, NODE_ENV } = ENV
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient
 }
 
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL
+  connectionString: DATABASE_URL
 })
 
 const prisma =
@@ -15,6 +18,6 @@ const prisma =
     adapter
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export default prisma

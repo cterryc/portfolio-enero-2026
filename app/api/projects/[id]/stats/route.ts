@@ -3,12 +3,15 @@ import prisma from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const stats = await prisma.projectStat.findMany({
-      where: { projectId: params.id }
+      where: { projectId: id }
     })
+
+    console.log('id 123 =>', id)
 
     return NextResponse.json(stats)
   } catch (error) {
@@ -37,7 +40,8 @@ export async function POST(
           label: item.label,
           val: item.val,
           color: item.color
-        }))
+        })),
+        skipDuplicates: true
       })
       return NextResponse.json(stats, { status: 201 })
     }

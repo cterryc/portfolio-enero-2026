@@ -76,9 +76,12 @@ export interface Project {
     language: string
     lines: string[]
   }
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface ProjectsContextProps {
   projects: Project[]
   projectsErrorFetch: string
+  removeProject: (idProject: string) => void
 }

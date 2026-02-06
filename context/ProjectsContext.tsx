@@ -35,8 +35,16 @@ export const ProjectsProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const removeProject = (idProject: string) => {
+    setProjects((prev) => {
+      return prev.filter((project) => project.id !== idProject)
+    })
+  }
+
   return (
-    <ProjectsContext.Provider value={{ projects, projectsErrorFetch }}>
+    <ProjectsContext.Provider
+      value={{ projects, projectsErrorFetch, removeProject }}
+    >
       {children}
     </ProjectsContext.Provider>
   )

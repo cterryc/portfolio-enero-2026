@@ -34,8 +34,107 @@ export default function SkillsPage() {
 
   return (
     <div className='flex-1 flex flex-col lg:flex-row overflow-hidden'>
+      {/* Panel derecho: Tecnologías */}
+      <div className='flex-1 lg:w-1/2 overflow-y-auto bg-panel-dark relative border-b lg:border-b-0 lg:border-r border-border-dark'>
+        <div className='p-6 md:p-8 max-w-3xl mx-auto'>
+          {/* Cabecera */}
+          <div className='mb-10'>
+            <div className='flex items-center gap-3 mb-2'>
+              <Code className='text-primary w-7 h-7' />
+              <h1 className='text-2xl font-bold text-white'>
+                Stack Tecnológico
+              </h1>
+            </div>
+            <p className='text-gray-400'>
+              Mi conjunto de herramientas y tecnologías organizadas por
+              categorías
+            </p>
+          </div>
+
+          {/* Sección: Frontend */}
+          <div className='mb-10'>
+            <div className='flex items-center gap-3 mb-6'>
+              <Monitor className='text-primary w-6 h-6' />
+              <h2 className='text-xl font-bold text-white'>Frontend</h2>
+            </div>
+            <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3'>
+              {tecnologias.frontend.map((tech) => (
+                <div
+                  key={tech.nombre}
+                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-primary/50 transition-colors group'
+                >
+                  <span className='text-white font-medium'>{tech.nombre}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sección: Backend */}
+          <div className='mb-10'>
+            <div className='flex items-center gap-3 mb-6'>
+              <Server className='text-blue-400 w-6 h-6' />
+              <h2 className='text-xl font-bold text-white'>Backend</h2>
+            </div>
+            <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3'>
+              {tecnologias.backend.map((tech) => (
+                <div
+                  key={tech.nombre}
+                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-blue-400/50 transition-colors group'
+                >
+                  <span className='text-white font-medium'>{tech.nombre}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sección: Bases de Datos */}
+          <div className='mb-10'>
+            <div className='flex items-center gap-3 mb-6'>
+              <Database className='text-green-400 w-6 h-6' />
+              <h2 className='text-xl font-bold text-white'>Bases de Datos</h2>
+            </div>
+            <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3'>
+              {tecnologias.basesDeDatos.map((tech) => (
+                <div
+                  key={tech.nombre}
+                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-green-400/50 transition-colors group'
+                >
+                  <span className='text-white font-medium'>{tech.nombre}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sección: Herramientas */}
+          <div className='mb-8'>
+            <div className='flex items-center gap-3 mb-6'>
+              <Wrench className='text-purple-400 w-6 h-6' />
+              <h2 className='text-xl font-bold text-white'>Herramientas</h2>
+            </div>
+            <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3'>
+              {tecnologias.herramientas.map((tech) => (
+                <div
+                  key={tech.nombre}
+                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-purple-400/50 transition-colors group'
+                >
+                  <span className='text-white font-medium'>{tech.nombre}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Nota al pie */}
+          <div className='mt-12 pt-6 border-t border-border-dark text-center'>
+            <p className='text-gray-500 text-sm'>
+              Conocimientos adquiridos a través de formación técnica y práctica
+              continua
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Panel izquierdo: Editor de código mejorado */}
-      <div className='flex-1 lg:w-1/2 p-0 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border-dark bg-panel-dark relative'>
+      <div className='flex-1 lg:max-w-96 p-0 overflow-y-auto bg-panel-dark relative'>
         <div className='flex font-mono text-sm leading-relaxed min-h-full'>
           {/* Números de línea - alineados correctamente */}
           <div className='w-12 shrink-0 flex flex-col bg-background-dark/30 border-r border-border-dark/50 py-4'>
@@ -173,105 +272,6 @@ export default function SkillsPage() {
               </div>
               <span>100%</span>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Panel derecho: Tecnologías */}
-      <div className='flex-1 lg:w-1/2 overflow-y-auto bg-panel-dark relative'>
-        <div className='p-6 md:p-8 max-w-3xl mx-auto'>
-          {/* Cabecera */}
-          <div className='mb-10'>
-            <div className='flex items-center gap-3 mb-2'>
-              <Code className='text-primary w-7 h-7' />
-              <h1 className='text-2xl font-bold text-white'>
-                Stack Tecnológico
-              </h1>
-            </div>
-            <p className='text-gray-400'>
-              Mi conjunto de herramientas y tecnologías organizadas por
-              categorías
-            </p>
-          </div>
-
-          {/* Sección: Frontend */}
-          <div className='mb-10'>
-            <div className='flex items-center gap-3 mb-6'>
-              <Monitor className='text-primary w-6 h-6' />
-              <h2 className='text-xl font-bold text-white'>Frontend</h2>
-            </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-              {tecnologias.frontend.map((tech) => (
-                <div
-                  key={tech.nombre}
-                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-primary/50 transition-colors group'
-                >
-                  <span className='text-white font-medium'>{tech.nombre}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Sección: Backend */}
-          <div className='mb-10'>
-            <div className='flex items-center gap-3 mb-6'>
-              <Server className='text-blue-400 w-6 h-6' />
-              <h2 className='text-xl font-bold text-white'>Backend</h2>
-            </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-              {tecnologias.backend.map((tech) => (
-                <div
-                  key={tech.nombre}
-                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-blue-400/50 transition-colors group'
-                >
-                  <span className='text-white font-medium'>{tech.nombre}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Sección: Bases de Datos */}
-          <div className='mb-10'>
-            <div className='flex items-center gap-3 mb-6'>
-              <Database className='text-green-400 w-6 h-6' />
-              <h2 className='text-xl font-bold text-white'>Bases de Datos</h2>
-            </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-              {tecnologias.basesDeDatos.map((tech) => (
-                <div
-                  key={tech.nombre}
-                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-green-400/50 transition-colors group'
-                >
-                  <span className='text-white font-medium'>{tech.nombre}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Sección: Herramientas */}
-          <div className='mb-8'>
-            <div className='flex items-center gap-3 mb-6'>
-              <Wrench className='text-purple-400 w-6 h-6' />
-              <h2 className='text-xl font-bold text-white'>Herramientas</h2>
-            </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-              {tecnologias.herramientas.map((tech) => (
-                <div
-                  key={tech.nombre}
-                  className='bg-background-dark rounded-lg border border-border-dark p-4 hover:border-purple-400/50 transition-colors group'
-                >
-                  <span className='text-white font-medium'>{tech.nombre}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Nota al pie */}
-          <div className='mt-12 pt-6 border-t border-border-dark text-center'>
-            <p className='text-gray-500 text-sm'>
-              Conocimientos adquiridos a través de formación técnica y práctica
-              continua
-            </p>
           </div>
         </div>
       </div>

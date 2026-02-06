@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { ENV } from '@/config/env'
 
 export async function GET(
   request: Request,
@@ -69,17 +70,26 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+  const body = await request.json()
+  if (!body.adminPassword || body.adminPassword !== ENV.ADMIN_PASSWORD) {
+    console.error('Admin Password Incorrect', body.adminPassword)
+    return NextResponse.json(
+      { error: `Admin Password Incorrect: "${body.adminPassword}"` },
+      { status: 500 }
+    )
+  }
+
   try {
     await prisma.project.delete({
       where: { id }
     })
 
-    return NextResponse.json({ message: 'Proyecto eliminado' })
+    return NextResponse.json({ message: `Proyecto con id ${id} eliminado` })
   } catch (error) {
     console.error(error)
 
     return NextResponse.json(
-      { error: 'Error al eliminar proyecto' },
+      { error: `Error al eliminar proyecto con id "${id}"` },
       { status: 500 }
     )
   }

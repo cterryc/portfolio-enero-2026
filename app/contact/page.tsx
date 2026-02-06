@@ -10,7 +10,7 @@ interface EmeailResponse {
 }
 
 interface ErrorResponse {
-  message: string
+  error: string
 }
 
 export default function ContactPage() {
@@ -61,7 +61,7 @@ export default function ContactPage() {
       .then(async (response) => {
         if (!response.ok) {
           const errorMessage = await response.json()
-          throw new Error(errorMessage.message)
+          throw new Error(errorMessage.error)
         }
         return response.json()
       })
@@ -81,7 +81,7 @@ export default function ContactPage() {
         })
         return data.message
       },
-      error: (err: ErrorResponse) => err.message
+      error: (err: ErrorResponse) => err.error
     })
 
     // revalidatePath('/contact')
@@ -90,7 +90,14 @@ export default function ContactPage() {
 
   return (
     <div className='flex-1 overflow-hidden relative flex flex-col bg-panel-dark'>
-      <Toaster toastOptions={{ duration: 8000, className: 'w-96' }} />
+      <Toaster
+        toastOptions={{
+          duration: 8000,
+          className: 'w-96',
+          success: { icon: '✅' },
+          error: { icon: '❌' }
+        }}
+      />
       <div className='flex-1 overflow-y-auto p-4 md:p-8 font-mono text-sm md:text-base'>
         <Form className='w-full max-w-4xl' action={createPost}>
           <div className='flex group hover:bg-white/2'>

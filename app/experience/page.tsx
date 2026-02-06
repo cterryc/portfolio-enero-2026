@@ -14,7 +14,7 @@ export default function ExperiencePage() {
   return (
     <div className='flex-1 flex flex-col lg:flex-row overflow-hidden'>
       {/* Left Pane: Git Log */}
-      <div className='flex-1 lg:w-5/12 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border-dark bg-panel-dark font-mono text-xs md:text-sm'>
+      <div className='flex-1 lg:max-w-96 2xl:max-w-max overflow-y-auto border-b lg:border-b-0 lg:border-r border-border-dark bg-panel-dark font-mono text-xs md:text-sm'>
         <div className='sticky top-0 z-10 bg-background-dark border-b border-border-dark px-4 py-2 flex text-gray-500 text-xs uppercase tracking-wider'>
           <div className='w-16'>Graph</div>
           <div className='w-20'>Hash</div>
@@ -35,6 +35,7 @@ export default function ExperiencePage() {
                     ? 'bg-white/5 border-blue-500'
                     : 'border-transparent'
               }`}
+              title={`${commit.branch} | ${commit.role} | ${commit.company}`}
             >
               <div className='w-16 pl-4 py-3 shrink-0 font-bold text-lg leading-none select-none text-primary flex items-center gap-1'>
                 {commit.merge ? (
@@ -58,10 +59,7 @@ export default function ExperiencePage() {
                 )}
                 <span className='text-white font-bold'>{commit.role}</span>
                 {commit.company && (
-                  <span className='text-gray-500' title={commit.company}>
-                    {' '}
-                    @ {commit.company}
-                  </span>
+                  <span className='text-gray-500'> @ {commit.company}</span>
                 )}
               </div>
               <div className='hidden sm:block text-gray-500 text-xs pr-4'>

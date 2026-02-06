@@ -18,10 +18,66 @@ import {
 import Link from 'next/link'
 import { useFiles } from '@/context/FileContext'
 import { useProjects } from '@/context/ProjectsContext'
+import { useEffect } from 'react'
+import { driver } from 'driver.js'
 
 export default function SobreMi() {
   const { addFile } = useFiles()
   const { projects } = useProjects()
+
+  useEffect(() => {
+    // Definimos el driver dentro o fuera, pero la ejecución debe ser aquí
+    const getDriverFromStorage = window.localStorage.getItem('driverGuide')
+    const driverFromStorage = getDriverFromStorage
+      ? JSON.parse(getDriverFromStorage)
+      : null
+    if (!driverFromStorage) {
+      const driverObj = driver({
+        showProgress: true,
+        steps: [
+          {
+            element: '#sidebar',
+            popover: {
+              title: 'Barra de Archivos',
+              description:
+                'Archivos con información "Sobre mí, Experiencias, Proyectos, Habilidades y Contacto".'
+            }
+          },
+          {
+            element: '#tabsbar',
+            popover: {
+              title: 'Archivos abiertos',
+              description: 'Aquí se mostrarán los archivos abiertos.'
+            }
+          },
+          {
+            element: '#terminal',
+            popover: {
+              title: 'Terminal interactivo',
+              description: 'Escribe "help" para ver los comandos.'
+            }
+          },
+          {
+            element: '#redes',
+            popover: {
+              title: 'Contactame',
+              description:
+                'Ponte en contacto conmigo, que tengas un excelente día.'
+            }
+          }
+        ],
+        allowClose: false
+        // onDestroyStarted: () => {
+        //   if (!driverObj.hasNextStep() || confirm('Are you sure?')) {
+        //     driverObj.destroy()
+        //   }
+        // }
+      })
+
+      driverObj.drive()
+      window.localStorage.setItem('driverGuide', JSON.stringify('driverGuide'))
+    }
+  }, [])
 
   const educacion = [
     {
@@ -48,87 +104,8 @@ export default function SobreMi() {
 
   return (
     <div className='flex-1 flex flex-col lg:flex-row overflow-hidden'>
-      {/* Panel izquierdo: Foto e información básica */}
-      <div className='flex-1 lg:w-1/3 p-6 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border-dark bg-panel-dark'>
-        <div className='flex flex-col items-center'>
-          {/* Foto de perfil */}
-          <div className='relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary/20 mb-6'>
-            <Image
-              src='https://res.cloudinary.com/dniekrmqb/image/upload/q_auto/v1736975908/eie39wrcbgdhayy5qqu8.webp'
-              alt='Daniel Martel - Desarrollador Web'
-              fill
-              className='object-cover'
-              priority
-            />
-          </div>
-
-          <h1 className='text-3xl font-bold text-white mb-2 text-center'>
-            Daniel Martel
-          </h1>
-          <p className='text-primary text-lg mb-6 text-center'>
-            Desarrollador Web App
-          </p>
-
-          {/* Información de contacto */}
-          <div className='w-full space-y-4 mb-8'>
-            <div className='flex items-center gap-3 text-gray-300'>
-              <MapPin className='text-primary w-5 h-5' />
-              <span>Lima, Perú</span>
-            </div>
-            <div className='flex items-center gap-3 text-gray-300'>
-              <Calendar className='text-primary w-5 h-5' />
-              <span>2 años de experiencia</span>
-            </div>
-            <div className='flex items-center gap-3 text-gray-300'>
-              <Cpu className='text-primary w-5 h-5' />
-              <span>Ensamble de computadoras</span>
-            </div>
-          </div>
-
-          {/* Enlaces a redes */}
-          <div className='flex gap-4 mb-8'>
-            <a
-              href='https://www.linkedin.com/in/developer-martel/'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='bg-[#0A66C2] hover:bg-[#0A66C2]/90 text-white p-3 rounded-lg transition-colors'
-            >
-              <Linkedin className='w-6 h-6' />
-            </a>
-            <a
-              href='https://github.com/cterryc'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
-            >
-              <Github className='w-6 h-6' />
-            </a>
-            <a
-              href='mailto:danyel.martel@gmail.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
-            >
-              <Mail className='w-6 h-6' />
-            </a>
-          </div>
-
-          {/* Tarjeta de experiencia destacada */}
-          <div className='w-full bg-background-dark rounded-xl p-5 border border-border-dark'>
-            <div className='flex items-center gap-2 mb-3'>
-              <Award className='text-yellow-500 w-5 h-5' />
-              <h3 className='text-white font-semibold'>Logro Destacado</h3>
-            </div>
-            <p className='text-gray-300 text-sm'>
-              Implementación de Microsoft Azure y Google Cloud para
-              autenticación y acceso a APIs de correo, Drive y OneDrive.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Panel derecho: Descripción detallada */}
-      <div className='flex-1 lg:w-2/3 overflow-y-auto bg-panel-dark relative'>
+      {/* Panel izquierdo: Descripción detallada */}
+      <div className='flex-1 lg:w-2/3 overflow-y-auto bg-panel-dark relative border-b lg:border-b-0 lg:border-r border-border-dark'>
         <div className='p-6 md:p-8 max-w-3xl mx-auto'>
           {/* Sección: Sobre mí */}
           <div className='mb-10'>
@@ -246,6 +223,85 @@ export default function SobreMi() {
               </Link>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Panel Derecho: Foto e información básica */}
+      <div className='flex-1 lg:max-w-96 p-6 overflow-y-auto  bg-panel-dark'>
+        <div className='flex flex-col items-center'>
+          {/* Foto de perfil */}
+          <div className='relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary/20 mb-6'>
+            <Image
+              src='https://res.cloudinary.com/dniekrmqb/image/upload/q_auto/v1736975908/eie39wrcbgdhayy5qqu8.webp'
+              alt='Daniel Martel - Desarrollador Web'
+              fill
+              className='object-cover'
+              priority
+            />
+          </div>
+
+          <h1 className='text-3xl font-bold text-white mb-2 text-center'>
+            Daniel Martel
+          </h1>
+          <p className='text-primary text-lg mb-6 text-center'>
+            Desarrollador Web App
+          </p>
+
+          {/* Información de contacto */}
+          <div className='w-full space-y-2 mb-6'>
+            <div className='flex items-center justify-center gap-2 text-gray-300'>
+              <MapPin className='text-primary w-5 h-5' />
+              <span>Lima, Perú</span>
+            </div>
+            <div className='flex items-center  justify-center gap-2 text-gray-300'>
+              <Calendar className='text-primary w-5 h-5' />
+              <span>2 años de experiencia</span>
+            </div>
+            <div className='flex items-center  justify-center gap-2 text-gray-300'>
+              <Cpu className='text-primary w-5 h-5' />
+              <span>Ensamble de computadoras</span>
+            </div>
+          </div>
+
+          {/* Enlaces a redes */}
+          <div className='flex gap-4 mb-6'>
+            <a
+              href='https://www.linkedin.com/in/developer-martel/'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='bg-[#0A66C2] hover:bg-[#0A66C2]/90 text-white p-3 rounded-lg transition-colors'
+            >
+              <Linkedin className='w-6 h-6' />
+            </a>
+            <a
+              href='https://github.com/cterryc'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
+            >
+              <Github className='w-6 h-6' />
+            </a>
+            <a
+              href='mailto:danyel.martel@gmail.com'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors'
+            >
+              <Mail className='w-6 h-6' />
+            </a>
+          </div>
+
+          {/* Tarjeta de experiencia destacada */}
+          <div className='w-full bg-background-dark rounded-xl p-5 border border-border-dark'>
+            <div className='flex items-center gap-2 mb-3'>
+              <Award className='text-yellow-500 w-5 h-5' />
+              <h3 className='text-white font-semibold'>Logro Destacado</h3>
+            </div>
+            <p className='text-gray-300 text-sm'>
+              Implementación de Microsoft Azure y Google Cloud para
+              autenticación y acceso a APIs de correo, Drive y OneDrive.
+            </p>
+          </div>
         </div>
       </div>
     </div>

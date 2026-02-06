@@ -40,6 +40,8 @@ model ProjectStat {
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
+  // Esto crea una regla: No puede haber dos registros con mismo label Y mismo projectId
+  @@unique([projectId, label])
   @@map("project_stats")
 }
 
