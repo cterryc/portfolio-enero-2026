@@ -32,50 +32,55 @@ export default function SobreMi() {
       ? JSON.parse(getDriverFromStorage)
       : null
     if (!driverFromStorage) {
-      const driverObj = driver({
-        showProgress: true,
-        steps: [
-          {
-            element: '#sidebar',
-            popover: {
-              title: 'Barra de Archivos',
-              description:
-                'Archivos con información "Sobre mí, Experiencias, Proyectos, Habilidades y Contacto".'
+      setTimeout(() => {
+        const driverObj = driver({
+          showProgress: true,
+          steps: [
+            {
+              element: '#sidebar',
+              popover: {
+                title: 'Barra de Archivos',
+                description:
+                  'Archivos con información "Sobre mí, Experiencias, Proyectos, Habilidades y Contacto".'
+              }
+            },
+            {
+              element: '#tabsbar',
+              popover: {
+                title: 'Archivos abiertos',
+                description: 'Aquí se mostrarán los archivos abiertos.'
+              }
+            },
+            {
+              element: '#terminal',
+              popover: {
+                title: 'Terminal interactivo',
+                description: 'Escribe "help" para ver los comandos.'
+              }
+            },
+            {
+              element: '#redes',
+              popover: {
+                title: 'Contactame',
+                description:
+                  'Ponte en contacto conmigo, que tengas un excelente día.'
+              }
             }
-          },
-          {
-            element: '#tabsbar',
-            popover: {
-              title: 'Archivos abiertos',
-              description: 'Aquí se mostrarán los archivos abiertos.'
-            }
-          },
-          {
-            element: '#terminal',
-            popover: {
-              title: 'Terminal interactivo',
-              description: 'Escribe "help" para ver los comandos.'
-            }
-          },
-          {
-            element: '#redes',
-            popover: {
-              title: 'Contactame',
-              description:
-                'Ponte en contacto conmigo, que tengas un excelente día.'
-            }
-          }
-        ],
-        allowClose: false
-        // onDestroyStarted: () => {
-        //   if (!driverObj.hasNextStep() || confirm('Are you sure?')) {
-        //     driverObj.destroy()
-        //   }
-        // }
-      })
+          ],
+          allowClose: false
+          // onDestroyStarted: () => {
+          //   if (!driverObj.hasNextStep() || confirm('Are you sure?')) {
+          //     driverObj.destroy()
+          //   }
+          // }
+        })
 
-      driverObj.drive()
-      window.localStorage.setItem('driverGuide', JSON.stringify('driverGuide'))
+        driverObj.drive()
+        window.localStorage.setItem(
+          'driverGuide',
+          JSON.stringify('driverGuide')
+        )
+      }, 300)
     }
   }, [])
 
