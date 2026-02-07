@@ -3,13 +3,14 @@ import prisma from '@/lib/prisma'
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string; statId: string } }
+  { params }: { params: Promise<{ id: string; statId: string }> }
 ) {
   try {
+    const { statId } = await params
     const body = await request.json()
 
     const stat = await prisma.projectStat.update({
-      where: { id: parseInt(params.statId) },
+      where: { id: parseInt(statId) },
       data: {
         label: body.label,
         val: body.val,

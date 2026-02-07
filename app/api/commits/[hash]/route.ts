@@ -3,11 +3,12 @@ import prisma from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { hash: string } }
+  { params }: { params: Promise<{ hash: string }> }
 ) {
   try {
+    const { hash } = await params
     const commit = await prisma.commit.findUnique({
-      where: { hash: params.hash }
+      where: { hash: hash }
     })
 
     if (!commit) {
@@ -29,13 +30,14 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { hash: string } }
+  { params }: { params: Promise<{ hash: string }> }
 ) {
   try {
     const body = await request.json()
+    const { hash } = await params
 
     const commit = await prisma.commit.update({
-      where: { hash: params.hash },
+      where: { hash: hash },
       data: {
         role: body.role,
         company: body.company,
@@ -59,11 +61,12 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { hash: string } }
+  { params }: { params: Promise<{ hash: string }> }
 ) {
   try {
+    const { hash } = await params
     await prisma.commit.delete({
-      where: { hash: params.hash }
+      where: { hash: hash }
     })
 
     return NextResponse.json({ message: 'Commit eliminado' })
