@@ -79,7 +79,7 @@ export default function SobreMi() {
           JSON.stringify('driverGuide')
         )
       }, 300)
-    } else {
+    } else if (!driverFromStorage) {
       setTimeout(() => {
         const driverObj = driver({
           showProgress: true,
