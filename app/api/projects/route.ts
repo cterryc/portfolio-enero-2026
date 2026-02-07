@@ -37,6 +37,7 @@ const getCachedProjects = unstable_cache(
   ['projects-list'],
   {
     tags: ['projects']
+    // revalidate: 10
   }
 )
 

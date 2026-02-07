@@ -134,7 +134,7 @@ export default function SkillsPage() {
       </div>
 
       {/* Panel izquierdo: Editor de código mejorado */}
-      <div className='flex-1 lg:max-w-96 p-0 overflow-y-auto bg-panel-dark relative'>
+      <div className='flex-1 lg:max-w-96 max-md:hidden p-0 overflow-y-auto bg-panel-dark relative'>
         <div className='flex font-mono text-sm leading-relaxed min-h-full'>
           {/* Números de línea - alineados correctamente */}
           <div className='w-12 shrink-0 flex flex-col bg-background-dark/30 border-r border-border-dark/50 py-4'>

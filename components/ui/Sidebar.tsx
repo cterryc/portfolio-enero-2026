@@ -14,11 +14,13 @@ import {
   ChevronRight,
   Linkedin,
   Github,
-  Mail
+  Mail,
+  Menu,
+  X
 } from 'lucide-react'
 import { useFiles } from '@/context/FileContext'
 import { useProjects } from '@/context/ProjectsContext'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const iconMap = {
   javascript: File,
@@ -41,6 +43,33 @@ export default function Sidebar() {
   const { projects } = useProjects()
   const navigate = useRouter()
   const [openFolder, setOpenFolder] = useState(true)
+  const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+      if (window.innerWidth >= 768) {
+        setIsMobileOpen(false)
+      }
+    }
+
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+
+    return () => {
+      window.removeEventListener('resize', checkIfMobile)
+    }
+  }, [])
+
+  // Cerrar sidebar al navegar en móvil
+  useEffect(() => {
+    if (isMobile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsMobileOpen(false)
+    }
+  }, [pathname, isMobile])
 
   const linkComponent = (
     path: string,
@@ -61,6 +90,7 @@ export default function Sidebar() {
         }`}
         onClick={() => {
           addFile({ color, icon, name, path })
+          if (isMobile) setIsMobileOpen(false)
         }}
       >
         <Icon className={`text-${color}-400 text-[18px]`} />
@@ -71,8 +101,8 @@ export default function Sidebar() {
     )
   }
 
-  return (
-    <aside className='w-64 hidden md:flex flex-col bg-background-dark border-r border-border-dark shrink-0'>
+  const sidebarContent = (
+    <>
       <div className='h-10 px-4 flex items-center justify-between text-xs font-bold tracking-widest text-gray-400'>
         <span>EXPLORER</span>
         <MoreHorizontal className='text-[16px] cursor-pointer hover:text-white' />
@@ -115,7 +145,6 @@ export default function Sidebar() {
                 return (
                   <button
                     key={file.id}
-                    // href={`/${file.id}`}
                     className={`flex items-center gap-2 px-3 py-1.5 w-full text-left transition-colors group cursor-pointer ${
                       pathname === '/' + file.id
                         ? 'bg-primary/10 border-l-2 border-primary'
@@ -129,6 +158,7 @@ export default function Sidebar() {
                         path: '/' + file.id
                       })
                       navigate.push(`/${file.id}`)
+                      if (isMobile) setIsMobileOpen(false)
                     }}
                   >
                     <Icon className={`text-blue-400 text-[18px]`} />
@@ -177,6 +207,48 @@ export default function Sidebar() {
           <Mail className='w-6 h-6' />
         </a>
       </div>
-    </aside>
+    </>
+  )
+
+  return (
+    <>
+      {/* Botón hamburguesa para móvil */}
+      <button
+        id='toggleMenu'
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        className={
+          'md:hidden fixed top-1 right-1 z-50 p-2 bg-background-dark border border-border-dark rounded-lg hover:bg-white/5 transition-colors'
+        }
+        aria-label='Toggle menu'
+      >
+        {isMobileOpen ? (
+          <X className='w-6 h-6 text-gray-400 hover:text-white' />
+        ) : (
+          <Menu className='w-6 h-6 text-gray-400 hover:text-white' />
+        )}
+      </button>
+
+      {/* Overlay para móvil */}
+      {isMobileOpen && isMobile && (
+        <div
+          className='md:hidden fixed inset-0 bg-black/50 z-30 backdrop-blur-sm'
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar para desktop */}
+      <aside className='w-64 hidden md:flex flex-col bg-background-dark border-r border-border-dark shrink-0'>
+        {sidebarContent}
+      </aside>
+
+      {/* Sidebar para móvil */}
+      <aside
+        className={`md:hidden fixed top-0 left-0 h-full w-64 flex flex-col bg-background-dark border-r border-border-dark shrink-0 z-40 transition-transform duration-300 ease-in-out ${
+          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   )
 }

@@ -21,7 +21,7 @@ export default function TabsBar() {
 
   return (
     <div
-      className='flex h-10 bg-background-dark border-b border-border-dark overflow-x-auto no-scrollbar'
+      className='flex h-10 bg-background-dark border-b border-border-dark overflow-x-auto no-scrollbar max-md:hidden'
       id='tabsbar'
     >
       {filesList.map((tab, i) => {

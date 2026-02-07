@@ -26,12 +26,15 @@ export default function SobreMi() {
   const { projects } = useProjects()
 
   useEffect(() => {
-    // Definimos el driver dentro o fuera, pero la ejecución debe ser aquí
     const getDriverFromStorage = window.localStorage.getItem('driverGuide')
     const driverFromStorage = getDriverFromStorage
       ? JSON.parse(getDriverFromStorage)
       : null
-    if (!driverFromStorage) {
+
+    // ✅ Usar matchMedia para mejor compatibilidad
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches
+
+    if (!driverFromStorage && isDesktop) {
       setTimeout(() => {
         const driverObj = driver({
           showProgress: true,
@@ -68,11 +71,45 @@ export default function SobreMi() {
             }
           ],
           allowClose: false
-          // onDestroyStarted: () => {
-          //   if (!driverObj.hasNextStep() || confirm('Are you sure?')) {
-          //     driverObj.destroy()
-          //   }
-          // }
+        })
+
+        driverObj.drive()
+        window.localStorage.setItem(
+          'driverGuide',
+          JSON.stringify('driverGuide')
+        )
+      }, 300)
+    } else {
+      setTimeout(() => {
+        const driverObj = driver({
+          showProgress: true,
+          steps: [
+            {
+              element: '#toggleMenu',
+              popover: {
+                title: 'Menú de Archivos',
+                description:
+                  'Para una mejor experiencia, te recomiendo usar un ordenador o PC.'
+              }
+            },
+            {
+              element: '#displayOne',
+              popover: {
+                title: 'Descripción Detallada',
+                description:
+                  'Aquí encontrarás información completa y detallada del archivo seleccionado.'
+              }
+            },
+            {
+              element: '#displayTwo',
+              popover: {
+                title: 'Información Resumida',
+                description:
+                  'Muestra un resumen conciso con los datos más importantes del archivo.'
+              }
+            }
+          ],
+          allowClose: false
         })
 
         driverObj.drive()
@@ -110,7 +147,10 @@ export default function SobreMi() {
   return (
     <div className='flex-1 flex flex-col lg:flex-row overflow-hidden'>
       {/* Panel izquierdo: Descripción detallada */}
-      <div className='flex-1 lg:w-2/3 overflow-y-auto bg-panel-dark relative border-b lg:border-b-0 lg:border-r border-border-dark'>
+      <div
+        className='flex-1 lg:w-2/3 overflow-y-auto bg-panel-dark relative border-b lg:border-b-0 lg:border-r border-border-dark'
+        id='displayOne'
+      >
         <div className='p-6 md:p-8 max-w-3xl mx-auto'>
           {/* Sección: Sobre mí */}
           <div className='mb-10'>
@@ -232,7 +272,10 @@ export default function SobreMi() {
       </div>
 
       {/* Panel Derecho: Foto e información básica */}
-      <div className='flex-1 lg:max-w-96 p-6 overflow-y-auto  bg-panel-dark'>
+      <div
+        className='flex-1 lg:max-w-96 p-6 overflow-y-auto  bg-panel-dark'
+        id='displayTwo'
+      >
         <div className='flex flex-col items-center'>
           {/* Foto de perfil */}
           <div className='relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary/20 mb-6'>

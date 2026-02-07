@@ -194,7 +194,7 @@ export default function Terminal() {
 
   return (
     <div
-      className='h-48 border-t border-border-dark bg-background-dark flex flex-col shrink-0'
+      className='h-48 border-t border-border-dark bg-background-dark flex flex-col shrink-0 max-md:hidden'
       id='terminal'
     >
       <div className='flex items-center px-4 gap-6 border-b border-border-dark h-9'>
