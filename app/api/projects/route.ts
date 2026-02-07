@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { ENV } from '@/config/env'
+import { unstable_cache, revalidatePath } from 'next/cache'
 
 interface StatProps {
   label: string
@@ -24,23 +25,36 @@ interface ProjectProps {
   stats?: StatProps[]
 }
 
+// Función cacheada para obtener proyectos
+const getCachedProjects = unstable_cache(
+  async () => {
+    console.log('🔍 CONSULTANDO BASE DE DATOS') // Solo aparece cuando no hay cache
+    return await prisma.project.findMany({
+      include: { stats: true },
+      orderBy: { createdAt: 'asc' }
+    })
+  },
+  ['projects-list'],
+  {
+    tags: ['projects']
+  }
+)
+
 export async function GET() {
   try {
-    const projects = await prisma.project.findMany({
-      include: {
-        stats: true
-      },
-      orderBy: {
-        // 'desc' para los más recientes primero (3, 2, 1)
-        // 'asc' para los más antiguos primero (1, 2, 3)
-        createdAt: 'asc'
-      }
-    })
-
+    // const newPromise = new Promise((res) => {
+    //   setTimeout(() => {
+    //     res(() => {
+    //       return 'Resuelte'
+    //     })
+    //   }, 1500)
+    // })
+    // const data = await newPromise
+    // console.log(data)
+    const projects = await getCachedProjects()
     return NextResponse.json(projects)
   } catch (error) {
     console.error('Error en la base de datos:', error)
-
     return NextResponse.json(
       { error: 'Error al obtener proyectos' },
       { status: 500 }
@@ -101,6 +115,9 @@ export async function POST(request: Request) {
         skipDuplicates: true
       })
 
+      console.log('♻️ INVALIDANDO CACHE de proyectos')
+      revalidatePath('/api/projects')
+
       return NextResponse.json(projects, { status: 201 })
     }
 
@@ -119,6 +136,9 @@ export async function POST(request: Request) {
         codeSnippet: body.codeSnippet
       }
     })
+
+    console.log('♻️ INVALIDANDO CACHE de proyectos')
+    revalidatePath('/api/projects')
 
     return NextResponse.json(project, { status: 201 })
   } catch (error) {
